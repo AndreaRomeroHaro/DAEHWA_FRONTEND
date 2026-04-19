@@ -1,0 +1,19 @@
+<div class="container d-flex justify.content-center aling-items-center vh-100" style="background: linear-gradient(135deg,#0077C8 0%,#F28C28 100%);">
+    <div class="card shadow p-4 border-0" style="max-width: 420px; width: 100%; border-radius: 18px;">
+        <h2 class="text-center mb-4 fw-bold" style="color: #0077C8">Iniciar sesión</h2>
+        <form (ngSubmit)="login()">
+            <div class="mb-3">
+                <label class="form-label fw-semibold" style="color:#0077C8;">Correo electrónico</label>
+                <input type="email" class="form-control border-2" style="border-color:#F28C28" [(ngModel)]="email" name="email" required="true">
+            </div>
+            <div class="mb-3">
+                <label class="form-label fw-semibold" style="color:#0077C8">Contraseña</label>
+                <input type="password" class="form-control border-2" style="border-color:#F28C28" [(ngModel)]="password" name="password" required="true">
+            </div>
+            @if(error){
+                <div class="alert alert-danger py-2 text-center">{{error}}</div>
+            }
+            <button type="submit" class="btn w-100 mt-2 fw-semibold" style="background-color: #0077C8; color:white; border-radius: 8px;">Entrar</button>
+        </form>
+    </div>
+</div>
