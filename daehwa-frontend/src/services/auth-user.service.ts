@@ -44,4 +44,8 @@ export class AuthUserService{
     estaLogeado():boolean{
         return !!localStorage.getItem('token');
     }
+    
+    getToken(){
+        return localStorage.getItem('token')
+    }
 }
