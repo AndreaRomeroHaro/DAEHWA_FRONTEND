@@ -1,0 +1,25 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary px-3">
+    <img src="/img/logo.png" alt="logo" height="40" class="me-2">
+
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarReactivo">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarReactivo">
+    @if (usuario){
+        <ul class="navbar-nav ms-auto">
+            <li  class="nav-item d-flex align-items-center me-3">
+                <span class="text-white">
+                    {{usuario.nombre}}
+                    <span class="badge bg-warning text-dark ms-1">{{usuario.rol}}</span>
+                </span>
+            </li>
+        </ul>
+    }@else {
+        <ul class="navbar-nav ms-auto">
+            <li class="nav-item">
+                <a class="btn btn-light btn-sm" routerLink="/login">Iniciar sesión</a>
+            </li>
+        </ul>
+    }
+    </div>
+</nav>
