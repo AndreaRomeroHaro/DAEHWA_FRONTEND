@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { EvaluacionInicial } from '../../models/EvaluacionInicial';
+import { EvaluacionInicial } from '../../models/Evaluacion_Inicial';
 
 @Component({
   selector: 'app-evaluacion-inicial',

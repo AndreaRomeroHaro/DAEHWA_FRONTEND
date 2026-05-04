@@ -2,6 +2,31 @@
     <h2 class="mb-4">Plan de Intervencion</h2>
 
     <div class="card-shadow-sm">
-        <div></div>
+        <div class="card-body">
+            
+            <div class="mb-3">
+                <label class="form-label">Objectivos específicos</label>
+                <textarea class="form-control" rows="3" [(ngModel)]="plan_intervencion.objetivos_especificos"></textarea>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Contenidos</label>
+                <textarea class="form-label" rows="3" [(ngModel)]="plan_intervencion.contenidos"></textarea>
+            </div>
+
+            <div class="row">
+                
+                <div class="col-md-6 mb-3">
+                    <label class="form-label"> Frecuencia (sesiones/semana)</label>
+                    <input type="number" class="form-control" [(ngModel)]="plan_intervencion.frecuencia">
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Duración (minutos)</label>
+                    <input type="number" class="form-control" [(ngModel)]="plan_intervencion.duracion_sesiones">
+                </div>
+            </div>
+            <button class="btn btn-primary" (click)="guardarPlan_Intervencion()">Guardar plan de intervención</button>
+        </div>
     </div>
 </div>
