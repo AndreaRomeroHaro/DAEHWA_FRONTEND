@@ -1,9 +1,10 @@
 import { Component } from '@angular/core';
-import { RouterLink } from "@angular/router";
+import { RouterOutlet } from "@angular/router";
 
 @Component({
   selector: 'app-logopeda',
-  imports: [RouterLink],
+  standalone:true,
+  imports: [RouterOutlet],
   templateUrl: './logopeda.component.html',
   styleUrl: './logopeda.component.css',
 })

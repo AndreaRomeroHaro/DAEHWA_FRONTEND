@@ -7,3 +7,4 @@ import { Component } from '@angular/core';
   styleUrl: './evaluaciones-periodicas.component.css',
 })
 export class EvaluacionesPeriodicasComponent {}
+export default EvaluacionesPeriodicasComponent;

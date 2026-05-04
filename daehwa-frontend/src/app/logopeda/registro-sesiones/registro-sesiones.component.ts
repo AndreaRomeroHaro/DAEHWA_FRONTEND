@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 
 @Component({
   selector: 'app-registro-sesiones',
-  imports: [],
+  standalone:true,
   templateUrl: './registro-sesiones.component.html',
   styleUrl: './registro-sesiones.component.css',
 })

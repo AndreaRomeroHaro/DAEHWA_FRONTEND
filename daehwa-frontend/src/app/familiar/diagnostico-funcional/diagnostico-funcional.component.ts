@@ -7,3 +7,4 @@ import { Component } from '@angular/core';
   styleUrl: './diagnostico-funcional.component.css',
 })
 export class DiagnosticoFuncionalComponent {}
+export default DiagnosticoFuncionalComponent;

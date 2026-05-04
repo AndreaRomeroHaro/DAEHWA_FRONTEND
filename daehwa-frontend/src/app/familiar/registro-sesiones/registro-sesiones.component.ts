@@ -7,3 +7,4 @@ import { Component } from '@angular/core';
   styleUrl: './registro-sesiones.component.css',
 })
 export class RegistroSesionesComponent {}
+export default RegistroSesionesComponent;

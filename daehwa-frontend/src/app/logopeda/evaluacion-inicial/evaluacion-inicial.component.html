@@ -1,1 +1,30 @@
-<p>evaluacion-inicial works!</p>
+<div class="container mt-4">
+    
+    <h2 class="mb-4">Evaluación inicial</h2>
+    
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <div class="mb-3">
+                <label class="form-label">Antecedentes clínicos</label>
+                <textarea class="form-control" rows="3" [(ngModel)]="evaluacion.antecedentes_clinicos"></textarea>
+            </div>
+            
+            <div class="mb-3">
+                <label class="form-label">Pruebas realizadas</label>
+                <textarea class="form-control" rows="3" [(ngModel)]="evaluacion.pruebas"></textarea>
+            </div>
+        
+            <div class="mb-3">
+                <label class="form-label">Observación directa</label>
+                <textarea class="form-control" rows="3" [(ngModel)]="evaluacion.observacion_directa"></textarea>
+            </div>
+        
+            <div class="mb-3">
+                <label class="form-label">Archivo Adjunto</label>
+                <input type="file" class="form-control" multiple (change)="subirArchivos($event)">
+            </div>
+        
+            <button class="btn btn-primary" (click)="guardarEvaluacion()"></button>
+        </div>
+    </div>
+</div>

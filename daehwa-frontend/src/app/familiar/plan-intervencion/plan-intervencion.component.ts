@@ -7,3 +7,4 @@ import { Component } from '@angular/core';
   styleUrl: './plan-intervencion.component.css',
 })
 export class PlanIntervencionComponent {}
+export default PlanIntervencionComponent;

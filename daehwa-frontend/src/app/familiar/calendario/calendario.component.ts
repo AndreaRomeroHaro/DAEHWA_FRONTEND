@@ -7,3 +7,4 @@ import { Component } from '@angular/core';
   styleUrl: './calendario.component.css',
 })
 export class CalendarioComponent {}
+export default CalendarioComponent;
