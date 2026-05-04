@@ -1,30 +1,117 @@
 <div class="container mt-4">
-    
-    <h2 class="mb-4">Evaluación inicial</h2>
-    
-    <div class="card shadow-sm">
-        <div class="card-body">
-            <div class="mb-3">
-                <label class="form-label">Antecedentes clínicos</label>
-                <textarea class="form-control" rows="3" [(ngModel)]="evaluacion.antecedentes_clinicos"></textarea>
-            </div>
-            
-            <div class="mb-3">
-                <label class="form-label">Pruebas realizadas</label>
-                <textarea class="form-control" rows="3" [(ngModel)]="evaluacion.pruebas"></textarea>
-            </div>
-        
-            <div class="mb-3">
-                <label class="form-label">Observación directa</label>
-                <textarea class="form-control" rows="3" [(ngModel)]="evaluacion.observacion_directa"></textarea>
-            </div>
-        
-            <div class="mb-3">
-                <label class="form-label">Archivo Adjunto</label>
-                <input type="file" class="form-control" multiple (change)="subirArchivos($event)">
-            </div>
-        
-            <button class="btn btn-primary" (click)="guardarEvaluacion()"></button>
-        </div>
+
+  <h2 class="mb-4">Evaluación Inicial</h2>
+
+  <div class="card shadow-sm mb-4">
+    <div class="card-body">
+      <h5 class="mb-3">
+        {{ editar ? 'Editar evaluación' : 'Nueva evaluación' }}
+      </h5>
+
+      <div class="mb-3">
+        <label class="form-label">Antecedentes clínicos</label>
+        <textarea class="form-control" rows="3"
+          [(ngModel)]="nuevaEvaluacion.antecedentes_clinicos"></textarea>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Entorno familiar</label>
+        <textarea class="form-control" rows="3"
+          [(ngModel)]="nuevaEvaluacion.entorno_familiar"></textarea>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Pruebas realizadas</label>
+        <textarea class="form-control" rows="3"
+          [(ngModel)]="nuevaEvaluacion.pruebas"></textarea>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Archivos adjuntos</label>
+        <input type="file" class="form-control" multiple (change)="subirArchivos($event)">
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Observación directa</label>
+        <textarea class="form-control" rows="3"
+          [(ngModel)]="nuevaEvaluacion.observacion_directa"></textarea>
+      </div>
+
+      <button class="btn btn-primary" (click)="crearEvaluacion()">
+        {{ editar ? 'Guardar cambios' : 'Guardar evaluación' }}
+      </button>
     </div>
+  </div>
+
+
+  <h4 class="mb-3">Evaluaciones registradas</h4>
+
+  <ul class="list-group">
+    @for (ev of evaluaciones; track ev.id_evaluacion) {
+      <li class="list-group-item d-flex justify-content-between align-items-center">
+        <div>
+          <strong>ID:</strong> {{ ev.id_evaluacion }}<br>
+          {{ ev.antecedentes_clinicos | slice:0:50 }}...
+        </div>
+        <div>
+          <button class="btn btn-sm btn-outline-primary me-2"
+            data-bs-toggle="modal" data-bs-target="#modalEvaluacion"
+            (click)="consultarEvaluacion(ev.id_evaluacion)">
+            Ver
+          </button>
+          <button class="btn btn-sm btn-outline-secondary"
+            (click)="editarEvaluacion(ev.id_evaluacion)">
+            Editar
+          </button>
+        </div>
+      </li>
+    } @empty {
+      <li class="list-group-item text-center text-muted">
+        No hay evaluaciones registradas.
+      </li>
+    }
+  </ul>
+
+</div>
+
+<div class="modal fade" id="modalEvaluacion" tabindex="-1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h5 class="modal-title">Detalles de la evaluación inicial</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+
+      <div class="modal-body">
+        @if (evaluacionSeleccionada) {
+
+          <p><strong>ID:</strong> {{ evaluacionSeleccionada.id_evaluacion }}</p>
+
+          <p><strong>Antecedentes clínicos:</strong></p>
+          <p>{{ evaluacionSeleccionada.antecedentes_clinicos }}</p>
+
+          <p><strong>Entorno familiar:</strong></p>
+          <p>{{ evaluacionSeleccionada.entorno_familiar }}</p>
+
+          <p><strong>Pruebas realizadas:</strong></p>
+          <p>{{ evaluacionSeleccionada.pruebas }}</p>
+
+          <p><strong>Observación directa:</strong></p>
+          <p>{{ evaluacionSeleccionada.observacion_directa }}</p>
+
+          <p><strong>Archivos adjuntos:</strong></p>
+          <ul>
+            @for (file of evaluacionSeleccionada.archivos_adjuntos; track $index) {
+              <li>{{ file.name }}</li>
+            } @empty {
+              <li>No hay archivos adjuntos.</li>
+            }
+          </ul>
+
+        }
+      </div>
+
+    </div>
+  </div>
 </div>

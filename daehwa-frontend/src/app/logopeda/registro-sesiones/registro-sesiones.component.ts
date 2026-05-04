@@ -1,7 +1,8 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { Sesion } from '../../models/sesion';
+import { RegistroSesion } from '../../models/Registro_Sesiones';
+import { RegistroSesionService } from '../../services/registro-sesiones.service';
 
 @Component({
   selector: 'app-registro-sesiones',
@@ -10,10 +11,10 @@ import { Sesion } from '../../models/sesion';
   templateUrl: './registro-sesiones.component.html',
   styleUrl: './registro-sesiones.component.css',
 })
-export class RegistroSesionesComponent {
-  sesiones:Sesion[]=[];
+export class RegistroSesionesComponent implements OnInit {
+  sesiones:RegistroSesion[]=[];
 
-  nuevaSesion:Sesion={
+  nuevaSesion:RegistroSesion={
     id_sesion:0,
     fecha:new Date(),
     actividades:'',
@@ -25,28 +26,65 @@ export class RegistroSesionesComponent {
   };
 
   campoAreaTemporal:string='';
-  campoMultimediaTemporal:File[]=[];
+  sesionSeleccionada:RegistroSesion |null=null;
+  editar=false;
 
-  subirMultimedia(event:any){
-    this.campoMultimediaTemporal=Array.from(event.target.file);
+  constructor(private sesionServicio:RegistroSesionService){}
+
+  ngOnInit(): void {
+      this.cargarSesiones();
   }
 
-  agregarArea(){
+  cargarSesiones():void{
+    this.sesionServicio.listarRegistro_Sesiones().subscribe(sesion=>{this.sesiones=sesion;});
+  }
+  
+  actualizarFecha(fecha:string):void{
+    this.nuevaSesion.fecha=new Date(fecha);
+  }
+
+  agregarArea():void{
     if(this.campoAreaTemporal.trim()!==''){
-      this.nuevaSesion.areas_lenguaje.push(this.campoAreaTemporal.trim());
-      this.campoAreaTemporal='';
+      this.nuevaSesion.areas_lenguaje.push(this.campoAreaTemporal.trim())
+    }
+  }
+  eliminarArea(area:number):void{
+    this.nuevaSesion.areas_lenguaje.splice(area,1);
+  }
+
+  subirMultimedia(event:any):void{
+    const archivos=event.target.files;
+    this.nuevaSesion.multimedia=Array.from(archivos)
+  }
+
+  crearSesion():void{
+    if(this.editar && this.nuevaSesion.id_sesion){
+      this.sesionServicio.editarRegistro_Sesiones(this.nuevaSesion.id_sesion,this.nuevaSesion).subscribe(()=>{
+        this.editar=false;
+        this.resetearFormulario();
+        this.cargarSesiones();
+      });
+    }else{
+      this.sesionServicio.crearRegistro_Sesiones(this.nuevaSesion).subscribe(()=>{
+        this.resetearFormulario();
+        this.cargarSesiones();
+      });
     }
   }
 
-  registrarSesion(){
-    if(!this.nuevaSesion.fecha || !this.nuevaSesion.actividades)
-    {
-      return;
-    }
-    this.nuevaSesion.id_sesion=Date.now();
-    this.nuevaSesion.multimedia=this.campoMultimediaTemporal;
-    this.sesiones.push({...this.nuevaSesion})
+  editarSesion(id:number):void{
+    this.sesionServicio.consultarRegistro_Sesiones(id).subscribe(sesion=>{
+      this.nuevaSesion={...sesion};
+      this.editar=true;
+    })
+  }
+  consultarSesion(id:number):void{
+    this.sesionServicio.consultarRegistro_Sesiones(id).subscribe(sesion=>{
+      this.sesionSeleccionada=sesion;
+    });
+  }
 
+  resetearFormulario():void{
     this.nuevaSesion={
       id_sesion:0,
       fecha:new Date(),
@@ -56,21 +94,7 @@ export class RegistroSesionesComponent {
       aspectos_mejorar:'',
       observaciones:'',
       multimedia:[]
-    }
-    this.campoMultimediaTemporal=[];
-  }
-
-  sesionSeleccionada:Sesion|null=null;
-
-  consultarSesion(id:number){
-    this.sesionSeleccionada=this.sesiones.find(sesion=>sesion.id_sesion===id)||null;
-  }
-
-  eliminarSesion(id:number){
-    this.sesiones=this.sesiones.filter(sesion=>sesion.id_sesion!==id);
-  }
-  actualizarFecha(fecha:string){
-    this.nuevaSesion.fecha=new Date(fecha);
+    };
   }
 }
 export default RegistroSesionesComponent;

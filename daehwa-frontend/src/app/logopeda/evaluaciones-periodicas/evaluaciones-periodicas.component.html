@@ -1,1 +1,116 @@
-<p>evaluaciones-periodicas works!</p>
+<div class="container mt-4">
+
+  <h2 class="mb-4">Evaluaciones Periódicas</h2>
+
+
+  <div class="card shadow-sm mb-4">
+    <div class="card-body">
+      <h5 class="mb-3">
+        {{ editar ? 'Editar evaluación' : 'Nueva evaluación' }}
+      </h5>
+
+      <div class="mb-3">
+        <label class="form-label">Fecha</label>
+        <input type="date" class="form-control"
+          [ngModel]="nuevaEvaluacion.fecha | date:'yyyy-MM-dd'"
+          (ngModelChange)="actualizarFecha($event)">
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Áreas evaluadas</label>
+        <textarea class="form-control" rows="2"
+          [(ngModel)]="nuevaEvaluacion.areas"></textarea>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Instrumentos utilizados (separados por comas)</label>
+        <input type="text" class="form-control"
+          [ngModel]="nuevaEvaluacion.instrumentos.join(', ')"
+          (ngModelChange)="actualizarInstrumentos($event)">
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Cambios observados</label>
+        <textarea class="form-control" rows="3"
+          [(ngModel)]="nuevaEvaluacion.cambios"></textarea>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Puntuación</label>
+        <input type="number" class="form-control"
+          [(ngModel)]="nuevaEvaluacion.puntuacion">
+      </div>
+
+      <button class="btn btn-primary" (click)="crearEvaluacion()">
+        {{ editar ? 'Guardar cambios' : 'Guardar evaluación' }}
+      </button>
+    </div>
+  </div>
+  
+  <h4 class="mb-3">Evaluaciones registradas</h4>
+
+  <ul class="list-group">
+    @for (ev of evaluaciones; track ev.id_evaluacion) {
+      <li class="list-group-item d-flex justify-content-between align-items-center">
+        <div>
+          <strong>{{ ev.fecha | date:'dd/MM/yyyy' }}</strong><br>
+          {{ ev.areas | slice:0:50 }}...
+        </div>
+        <div>
+          <button class="btn btn-sm btn-outline-primary me-2"
+            data-bs-toggle="modal" data-bs-target="#modalEvaluacion"
+            (click)="consultarEvaluacion(ev.id_evaluacion)">
+            Ver
+          </button>
+          <button class="btn btn-sm btn-outline-secondary"
+            (click)="editarEvaluacion(ev.id_evaluacion)">
+            Editar
+          </button>
+        </div>
+      </li>
+    } @empty {
+      <li class="list-group-item text-center text-muted">
+        No hay evaluaciones periódicas registradas.
+      </li>
+    }
+  </ul>
+
+</div>
+
+<div class="modal fade" id="modalEvaluacion" tabindex="-1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h5 class="modal-title">Detalles de la evaluación periódica</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+
+      <div class="modal-body">
+        @if (evaluacionSeleccionada) {
+
+          <p><strong>Fecha:</strong> {{ evaluacionSeleccionada.fecha | date:'dd/MM/yyyy' }}</p>
+
+          <p><strong>Áreas evaluadas:</strong></p>
+          <p>{{ evaluacionSeleccionada.areas }}</p>
+
+          <p><strong>Instrumentos utilizados:</strong></p>
+          <ul>
+            @for (inst of evaluacionSeleccionada.instrumentos; track $index) {
+              <li>{{ inst }}</li>
+            } @empty {
+              <li>No hay instrumentos registrados.</li>
+            }
+          </ul>
+
+          <p><strong>Cambios observados:</strong></p>
+          <p>{{ evaluacionSeleccionada.cambios }}</p>
+
+          <p><strong>Puntuación:</strong> {{ evaluacionSeleccionada.puntuacion }}</p>
+
+        }
+      </div>
+
+    </div>
+  </div>
+</div>

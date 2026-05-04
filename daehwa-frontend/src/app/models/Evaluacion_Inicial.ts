@@ -1,4 +1,5 @@
 export interface EvaluacionInicial{
+    id_evaluacion:number;
     antecedentes_clinicos:string;
     entorno_familiar:string;
     pruebas:string;

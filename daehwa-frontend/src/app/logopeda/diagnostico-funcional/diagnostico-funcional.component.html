@@ -1,25 +1,97 @@
 <div class="container mt-4">
-    <h2 class="mb-4">Diagnóstico funcional</h2>
-    
-    <div class="card-shadow-sm">
-        <div class="card-body">
-            
-            <div class="mb-3">
-                <label class="form-label">Fecha</label>
-                <input type="date" class="form-control" [(ngModel)]="diagnostico.fecha">
-            </div>
 
-            <div class="mb-3">
-                <label class="form-label">Diagnóstico Funcional</label>
-                <textarea class="form-control" rows="4" [(ngModel)]="diagnostico.diagnostico_funcional"></textarea>
-            </div>
+  <h2 class="mb-4">Diagnóstico funcional</h2>
 
-            <div class="mb-3">
-                <label class="form-label">Recomendaciones</label>
-                <textarea class="form-control" rows="3" [(ngModel)]="diagnostico.recomendaciones"></textarea>
-            </div>
+  <div class="card shadow-sm mb-4">
+    <div class="card-body">
+      <h5 class="mb-3">
+        {{ editar ? 'Editar diagnóstico' : 'Nuevo diagnóstico' }}
+      </h5>
 
-            <button class="btn btn-primary" (click)="guardarDiagnostico()">Guardar diagnóstico</button>
-        </div>
+      <div class="mb-3">
+        <label class="form-label">Fecha</label>
+        <input
+          type="date"
+          class="form-control"
+          [ngModel]="nuevoDiagnostico.fecha | date:'yyyy-MM-dd'"
+          (ngModelChange)="actualizarFecha($event)">
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Diagnóstico funcional</label>
+        <textarea
+          class="form-control"
+          rows="3"
+          [(ngModel)]="nuevoDiagnostico.diagnostico_funcional">
+        </textarea>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Recomendaciones</label>
+        <textarea
+          class="form-control"
+          rows="3"
+          [(ngModel)]="nuevoDiagnostico.recomendaciones">
+        </textarea>
+      </div>
+
+      <button class="btn btn-primary" (click)="crearDiagnostico()">
+        {{ editar ? 'Guardar cambios' : 'Guardar diagnóstico' }}
+      </button>
     </div>
+  </div>
+  <h4 class="mb-3">Diagnósticos registrados</h4>
+
+  <ul class="list-group">
+    @for (diag of diagnosticos; track diag.id_diagnostico) {
+      <li class="list-group-item d-flex justify-content-between align-items-center">
+        <div>
+          <strong>{{ diag.fecha | date:'dd/MM/yyyy' }}</strong><br>
+          {{ diag.diagnostico_funcional }}
+        </div>
+        <div>
+          <button
+            class="btn btn-sm btn-outline-primary me-2"
+            data-bs-toggle="modal"
+            data-bs-target="#modalDiagnostico"
+            (click)="consultarDiagnostico(diag.id_diagnostico)">
+            Ver
+          </button>
+          <button
+            class="btn btn-sm btn-outline-secondary"
+            (click)="editarDiagnostico(diag.id_diagnostico)">
+            Editar
+          </button>
+        </div>
+      </li>
+    } @empty {
+      <li class="list-group-item text-center text-muted">
+        No hay diagnósticos registrados.
+      </li>
+    }
+  </ul>
+
+</div>
+
+<div class="modal fade" id="modalDiagnostico" tabindex="-1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h5 class="modal-title">Detalles del diagnóstico</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+
+      <div class="modal-body">
+        @if (diagnosticoSeleccionado) {
+          <p><strong>Fecha:</strong> {{ diagnosticoSeleccionado.fecha | date:'dd/MM/yyyy' }}</p>
+          <p><strong>Diagnóstico funcional:</strong></p>
+          <p>{{ diagnosticoSeleccionado.diagnostico_funcional }}</p>
+          <p><strong>Recomendaciones:</strong></p>
+          <p>{{ diagnosticoSeleccionado.recomendaciones }}</p>
+        }
+      </div>
+
+    </div>
+  </div>
 </div>

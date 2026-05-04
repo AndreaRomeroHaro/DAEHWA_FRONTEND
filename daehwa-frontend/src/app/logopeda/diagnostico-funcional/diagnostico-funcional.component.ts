@@ -1,7 +1,8 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { DiagnosticoFuncional } from '../../models/Diagnostico_Funcional';
+import { DiagnosticoFuncionalService } from '../../services/diagnostico-funcional.service';
 
 @Component({
   selector: 'app-diagnostico-funcional',
@@ -10,17 +11,67 @@ import { DiagnosticoFuncional } from '../../models/Diagnostico_Funcional';
   templateUrl: './diagnostico-funcional.component.html',
   styleUrl: './diagnostico-funcional.component.css',
 })
-export class DiagnosticoFuncionalComponent {
-  diagnostico:DiagnosticoFuncional={
+export class DiagnosticoFuncionalComponent implements OnInit {
+
+  diagnosticos: DiagnosticoFuncional[] =[];
+
+  nuevoDiagnostico:DiagnosticoFuncional={
     id_diagnostico:0,
     fecha:new Date(),
     diagnostico_funcional:'',
     recomendaciones:''
   };
 
+  diagnosticoSeleccionado:DiagnosticoFuncional |null=null;
+  editar=false;
+  constructor(private diagnosticoServicio:DiagnosticoFuncionalService){}
   
-  guardarDiagnostico(){
-    console.log('Diagnóstico guardado:',this.diagnostico);
+  ngOnInit(): void {
+      this.cargarDiagnosticos();
+  }
+
+  cargarDiagnosticos():void{
+    this.diagnosticoServicio.listarDiagnosticos().subscribe(diagnostico=>{this.diagnosticos=diagnostico})
+  }
+
+  actualizarFecha(fecha:string):void{
+    this.nuevoDiagnostico.fecha=new Date(fecha);
+  }
+
+  crearDiagnostico():void{
+    if(this.editar && this.nuevoDiagnostico.id_diagnostico){
+      this.diagnosticoServicio.editarDiagnostico(this.nuevoDiagnostico.id_diagnostico,this.nuevoDiagnostico).subscribe(()=>{
+        this.editar=false;
+        this.resetearFormulario();
+        this.cargarDiagnosticos();
+      });
+    }else{
+      this.diagnosticoServicio.crearDiagnostico(this.nuevoDiagnostico).subscribe(()=>{
+        this.resetearFormulario();
+        this.cargarDiagnosticos();
+      });
+    }
+  }
+
+  editarDiagnostico(id:number):void{
+    this.diagnosticoServicio.consultarDiagnostico(id).subscribe(diagnostico=>{
+      this.nuevoDiagnostico={...diagnostico};
+      this.editar=true;
+    })
+  }
+  consultarDiagnostico(id:number):void{
+    this.diagnosticoServicio.consultarDiagnostico(id).subscribe(diagnostico=>{
+      this.diagnosticoSeleccionado=diagnostico;
+    })
+  }
+
+  resetearFormulario():void{
+      this.nuevoDiagnostico={
+      id_diagnostico:0,
+      fecha:new Date(),
+      diagnostico_funcional:'',
+      recomendaciones:''
+    }
   }
 }
 export default DiagnosticoFuncionalComponent;

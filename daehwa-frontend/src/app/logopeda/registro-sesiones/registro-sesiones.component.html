@@ -1,113 +1,155 @@
 <div class="container mt-4">
-    <h2 class="mb-4">Registro de sesiones</h2>
 
-    <div class="card shadow-sm mb-4">
-        
-        <div class="card-body">
-            <h5 class="mb-3">Registrar nueva sesión</h5>
+  <h2 class="mb-4">Registro de Sesiones</h2>
 
-            <div class="mb-3">
-                <label class="form-label">Fecha</label>
-                <input type="date" class="form-control" [ngModel]="nuevaSesion.fecha | date:'dd-MM-yyyy'" (ngModelChange)="actualizarFecha($event)">
-            </div>
+  <div class="card shadow-sm mb-4">
+    <div class="card-body">
 
-            <div class="mb-3">
-                <label class="form-label">Actividades realizadas</label>
-                <textarea class="form-control" rows="3" [(ngModel)]="nuevaSesion.actividades"></textarea>
-            </div>
+      <h5 class="mb-3">
+        {{ editar ? 'Editar sesión' : 'Nueva sesión' }}
+      </h5>
 
-            <div class="mb-3">
-                <label class="form-label"> Áreas del lenguaje trabajadas</label>
-                
-                <div class="input-group mb-2">
-                    <input type="text" class="form-control" placeholder="Ej: Lenguaje expresivo" [(ngModel)]="campoAreaTemporal">
-                    <button class="btn btn-secondary" (click)="agregarArea()">Añadir</button>
-                </div>
-                
-                <div>
-                    @for (area of nuevaSesion.areas_lenguaje;track $index)
-                    {
-                        <span class="badge bg-primary me-2 mb-2">{{area}}</span>
-                    }
-                    @empty {
-                        <p class="text-muted"> No hay áreas añadidas.</p>
-                    }
-                </div>
-            </div>
+      <div class="mb-3">
+        <label class="form-label">Fecha</label>
+        <input type="date" class="form-control"
+          [ngModel]="nuevaSesion.fecha | date:'yyyy-MM-dd'"
+          (ngModelChange)="actualizarFecha($event)">
+      </div>
 
-            <div class="mb-3">
-                <label class="form-label">Logros</label>
-                <textarea class="form-control" rows="2" [(ngModel)]="nuevaSesion.logros"></textarea>
-            </div>
 
-            <div class="mb-3">
-                <label class="form-label">Aspectos a mejorar</label>
-                <textarea class="form-control" rows="2" [(ngModel)]="nuevaSesion.aspectos_mejorar"></textarea>
-            </div>
+      <div class="mb-3">
+        <label class="form-label">Actividades realizadas</label>
+        <textarea class="form-control" rows="3"
+          [(ngModel)]="nuevaSesion.actividades"></textarea>
+      </div>
 
-            <div class="mb-3">
-                <label class="form-label">Observaciones</label>
-                <textarea class="form-control" rows="2" [(ngModel)]="nuevaSesion.observaciones"></textarea>
-            </div>
+      <div class="mb-3">
+        <label class="form-label">Áreas del lenguaje</label>
 
-            <div class="mb-3">
-                <label class="form-label">Subir fotos o vídeos</label>
-                <textarea type="file" class="form-control" multiple (change)="subirMultimedia($event)"></textarea>
-            </div>
-            
-            <button class="btn btn-primary" (click)="registrarSesion()">Guardar sesión</button>
-        
+        <div class="input-group mb-2">
+          <input type="text" class="form-control" [(ngModel)]="campoAreaTemporal">
+          <button class="btn btn-outline-primary" (click)="agregarArea()">Añadir</button>
         </div>
+
+        <div>
+          @for (area of nuevaSesion.areas_lenguaje; track $index) {
+            <span class="badge bg-primary me-2">
+              {{ area }}
+              <button class="btn-close btn-close-white ms-2" (click)="eliminarArea($index)"></button>
+            </span>
+          }
+        </div>
+      </div>
+
+
+      <div class="mb-3">
+        <label class="form-label">Logros</label>
+        <textarea class="form-control" rows="2"
+          [(ngModel)]="nuevaSesion.logros"></textarea>
+      </div>
+
+      <!-- ASPECTOS A MEJORAR -->
+      <div class="mb-3">
+        <label class="form-label">Aspectos a mejorar</label>
+        <textarea class="form-control" rows="2"
+          [(ngModel)]="nuevaSesion.aspectos_mejorar"></textarea>
+      </div>
+
+      <!-- OBSERVACIONES -->
+      <div class="mb-3">
+        <label class="form-label">Observaciones</label>
+        <textarea class="form-control" rows="2"
+          [(ngModel)]="nuevaSesion.observaciones"></textarea>
+      </div>
+
+      <!-- MULTIMEDIA -->
+      <div class="mb-3">
+        <label class="form-label">Archivos multimedia</label>
+        <input type="file" class="form-control" multiple (change)="subirMultimedia($event)">
+      </div>
+
+      <button class="btn btn-primary" (click)="crearSesion()">
+        {{ editar ? 'Guardar cambios' : 'Guardar sesión' }}
+      </button>
+
     </div>
-    <h4 class="mb-3">Sesiones registradas</h4>
+  </div>
 
-    <ul class="list-group">
-        @for (sesion of sesiones; track sesion.id_sesion){
-            <li class="list-group-item d-flex justify-content-between align-items-center">
-                <div>
-                    <strong>{{sesion.fecha}}</strong>
-                    <span class="text-muted">Actividades:</span>{{sesion.actividades}}
-                </div>
+  <!-- LISTADO -->
+  <h4 class="mb-3">Sesiones registradas</h4>
 
-                <div>
-                    <button class="btn btn-sm btn-outline-primary me-2" data-bs-toggle="modal" data-bs-target="#modalDetalles" (click)="consultarSesion(sesion.id_sesion)">Ver detalle</button>
-                    <button class="btn btn-sm btn-outline-danger" (click)="eliminarSesion(sesion.id_sesion)">Eliminar</button>
-                </div>
-            </li>
-        }@empty {
-            <li class="list-group-item text-center text-muted">No hay sesiones registradas</li>
-        }
-    </ul>
+  <ul class="list-group">
+    @for (ses of sesiones; track ses.id_sesion) {
+      <li class="list-group-item d-flex justify-content-between align-items-center">
+        <div>
+          <strong>{{ ses.fecha | date:'dd/MM/yyyy' }}</strong><br>
+          {{ ses.actividades | slice:0:50 }}...
+        </div>
+        <div>
+          <button class="btn btn-sm btn-outline-primary me-2"
+            data-bs-toggle="modal" data-bs-target="#modalSesion"
+            (click)="consultarSesion(ses.id_sesion)">
+            Ver
+          </button>
+          <button class="btn btn-sm btn-outline-secondary"
+            (click)="editarSesion(ses.id_sesion)">
+            Editar
+          </button>
+        </div>
+      </li>
+    } @empty {
+      <li class="list-group-item text-center text-muted">
+        No hay sesiones registradas.
+      </li>
+    }
+  </ul>
+
 </div>
-<div class="modal fade" id="modalDetalles" tabindex="-1">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Detalles de la sesion</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body">
-                @if(sesionSeleccionada){
-                    <p><strong>Fecha:</strong>{{sesionSeleccionada.fecha}}</p>
-                    <p><strong>Actividades:</strong>{{sesionSeleccionada.actividades}}</p>
-                    
-                    <p><strong>Áreas del lenguaje:</strong></p>
-                    @for(area of sesionSeleccionada.areas_lenguaje;track $index){
-                        <span class="badge bg-primary me-2"> {{area}}</span>
-                    }
-                    <p class="mt-3"><strong>Logros:</strong>{{sesionSeleccionada.logros}}</p>
-                    <p><strong>Aspectos a mejorar:</strong>{{sesionSeleccionada.aspectos_mejorar}}</p>
-                    <p><strong>Archivos multimedia:</strong></p>
-                    <ul>
-                        @for (archivo of sesionSeleccionada.multimedia;track $index){
-                            <li>{{archivo.name}}</li>
-                        }@empty {
-                            <li>No hay archivos adjuntos.</li>
-                        }
-                    </ul>
-                }
-            </div>
-        </div>
-    </div>
 
+<!-- MODAL DETALLES -->
+<div class="modal fade" id="modalSesion" tabindex="-1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h5 class="modal-title">Detalles de la sesión</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+
+      <div class="modal-body">
+        @if (sesionSeleccionada) {
+
+          <p><strong>Fecha:</strong> {{ sesionSeleccionada.fecha | date:'dd/MM/yyyy' }}</p>
+
+          <p><strong>Actividades:</strong></p>
+          <p>{{ sesionSeleccionada.actividades }}</p>
+
+          <p><strong>Áreas del lenguaje:</strong></p>
+          @for (area of sesionSeleccionada.areas_lenguaje; track $index) {
+            <span class="badge bg-primary me-2">{{ area }}</span>
+          }
+
+          <p class="mt-3"><strong>Logros:</strong></p>
+          <p>{{ sesionSeleccionada.logros }}</p>
+
+          <p><strong>Aspectos a mejorar:</strong></p>
+          <p>{{ sesionSeleccionada.aspectos_mejorar }}</p>
+
+          <p><strong>Observaciones:</strong></p>
+          <p>{{ sesionSeleccionada.observaciones }}</p>
+
+          <p><strong>Archivos multimedia:</strong></p>
+          <ul>
+            @for (file of sesionSeleccionada.multimedia; track $index) {
+              <li>{{ file.name }}</li>
+            } @empty {
+              <li>No hay archivos adjuntos.</li>
+            }
+          </ul>
+
+        }
+      </div>
+
+    </div>
+  </div>
 </div>
