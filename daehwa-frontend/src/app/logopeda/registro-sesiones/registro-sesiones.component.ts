@@ -18,15 +18,14 @@ export class RegistroSesionesComponent implements OnInit {
     id_sesion:0,
     fecha:new Date(),
     actividades:'',
-    areas_lenguaje:[],
+    areas:[],
     logros:'',
     aspectos_mejorar:'',
     observaciones:'',
     multimedia:[]
   };
 
-  campoAreaTemporal:string='';
-  sesionSeleccionada:RegistroSesion |null=null;
+  registroDetalle:number |null=null;
   editar=false;
 
   constructor(private sesionServicio:RegistroSesionService){}
@@ -39,37 +38,24 @@ export class RegistroSesionesComponent implements OnInit {
     this.sesionServicio.listarRegistro_Sesiones().subscribe(sesion=>{this.sesiones=sesion;});
   }
   
-  actualizarFecha(fecha:string):void{
+  transformarFecha(fecha:string):void{
     this.nuevaSesion.fecha=new Date(fecha);
   }
 
-  agregarArea():void{
-    if(this.campoAreaTemporal.trim()!==''){
-      this.nuevaSesion.areas_lenguaje.push(this.campoAreaTemporal.trim())
-    }
-  }
-  eliminarArea(area:number):void{
-    this.nuevaSesion.areas_lenguaje.splice(area,1);
-  }
-
-  subirMultimedia(event:any):void{
-    const archivos=event.target.files;
-    this.nuevaSesion.multimedia=Array.from(archivos)
+  transformarAreas(areas:string):void{
+    this.nuevaSesion.areas=areas.split(', ').map(area=>area.trim());
   }
 
   crearSesion():void{
-    if(this.editar && this.nuevaSesion.id_sesion){
-      this.sesionServicio.editarRegistro_Sesiones(this.nuevaSesion.id_sesion,this.nuevaSesion).subscribe(()=>{
-        this.editar=false;
-        this.resetearFormulario();
-        this.cargarSesiones();
-      });
-    }else{
-      this.sesionServicio.crearRegistro_Sesiones(this.nuevaSesion).subscribe(()=>{
-        this.resetearFormulario();
-        this.cargarSesiones();
-      });
-    }
+    const peticion=this.editar && this.nuevaSesion.id_sesion 
+    ? this.sesionServicio.editarRegistro_Sesiones(this.nuevaSesion.id_sesion,this.nuevaSesion)
+    : this.sesionServicio.crearRegistro_Sesiones(this.nuevaSesion);
+  
+    peticion.subscribe(()=>{
+      this.editar=false;
+      this.resetearFormulario();
+      this.cargarSesiones();
+    })
   }
 
   editarSesion(id:number):void{
@@ -78,10 +64,20 @@ export class RegistroSesionesComponent implements OnInit {
       this.editar=true;
     })
   }
-  consultarSesion(id:number):void{
-    this.sesionServicio.consultarRegistro_Sesiones(id).subscribe(sesion=>{
-      this.sesionSeleccionada=sesion;
-    });
+
+  eliminarSesion(id:number):void{
+    this.sesionServicio.eliminarRegistro_Sesiones(id).subscribe(()=>{
+      this.cargarSesiones();
+    })
+  }
+
+  detallesSesion(id:number):void{
+    this.registroDetalle=this.registroDetalle===id ? null:id;
+  }
+  
+  subirMultimedia(event:any):void{
+    const archivos=event.target.files;
+    this.nuevaSesion.multimedia=Array.from(archivos)
   }
 
   resetearFormulario():void{
@@ -89,7 +85,7 @@ export class RegistroSesionesComponent implements OnInit {
       id_sesion:0,
       fecha:new Date(),
       actividades:'',
-      areas_lenguaje:[],
+      areas:[],
       logros:'',
       aspectos_mejorar:'',
       observaciones:'',

@@ -3,6 +3,7 @@ import { Component,OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { EvaluacionPeriodica } from '../../models/Evaluaciones_Periodicas';
 import { EvaluacionPeriodicaService } from '../../services/evaluaciones-periodica.service';
+import { Chart } from 'chart.js/auto';
 
 @Component({
   selector: 'app-evaluaciones-periodicas',
@@ -23,7 +24,8 @@ export class EvaluacionesPeriodicasComponent implements OnInit{
     puntuacion:0
   }
 
-  evaluacionSeleccionada:EvaluacionPeriodica|null=null;
+  evaluacionDetalle: number | null=null;
+  grafica: Chart | null=null;
   editar=false;
 
   constructor(private evaluacion_servicio:EvaluacionPeriodicaService){}
@@ -36,27 +38,24 @@ export class EvaluacionesPeriodicasComponent implements OnInit{
     this.evaluacion_servicio.listarEvaluacion().subscribe(evaluacion=>{this.evaluaciones=evaluacion;});
   }
   
-  actualizarFecha(fecha:string):void{
+  transformarFecha(fecha:string):void{
     this.nuevaEvaluacion.fecha=new Date(fecha);
   }
 
-  actualizarInstrumentos(instrumentos:string):void{
+  transformarInstrumentos(instrumentos:string):void{
     this.nuevaEvaluacion.instrumentos=instrumentos.split(',').map(i=>i.trim());
   }
 
   crearEvaluacion():void{
-    if(this.editar && this.nuevaEvaluacion.id_evaluacion){
-      this.evaluacion_servicio.editarEvaluacion(this.nuevaEvaluacion.id_evaluacion,this.nuevaEvaluacion).subscribe(()=>{
-        this.editar=false;
-        this.resetearFormulario();
-        this.cargarEvaluaciones();
-      });
-    }else{
-      this.evaluacion_servicio.crearEvaluacion(this.nuevaEvaluacion).subscribe(()=>{
-        this.resetearFormulario();
-        this.cargarEvaluaciones();
-      });
-    }
+    const peticion=this.editar&&this.nuevaEvaluacion.id_evaluacion ?
+    this.evaluacion_servicio.editarEvaluacion(this.nuevaEvaluacion.id_evaluacion,this.nuevaEvaluacion):
+    this.evaluacion_servicio.crearEvaluacion(this.nuevaEvaluacion);
+
+    peticion.subscribe(()=>{
+      this.editar=false;
+      this.resetearFormulario();
+      this.cargarEvaluaciones();
+    })
   }
 
   editarEvaluacion(id:number):void{
@@ -65,10 +64,15 @@ export class EvaluacionesPeriodicasComponent implements OnInit{
       this.editar=true;
     })
   }
-  consultarEvaluacion(id:number):void{
-    this.evaluacion_servicio.consultarEvaluacion(id).subscribe(evaluacion=>{
-      this.evaluacionSeleccionada=evaluacion;
-    });
+
+  eliminarEvaluacion(id:number):void{
+    this.evaluacion_servicio.eliminarEvaluacion(id).subscribe(()=>{
+      this.cargarEvaluaciones();
+    })
+  }
+
+  detallesEvaluacion(id:number):void{
+    this.evaluacionDetalle=this.evaluacionDetalle=== id ? null:id;
   }
 
   resetearFormulario():void{
@@ -82,8 +86,30 @@ export class EvaluacionesPeriodicasComponent implements OnInit{
     }
   }
 
-  // generarGrafica():void{
+  generarGrafica(){
+      const ejeXFecha=this.evaluaciones.map(evaluacion=>new Date(evaluacion.fecha).toLocaleDateString());
+      const ejeYPuntuacion=this.evaluaciones.map(evaluacion=>evaluacion.puntuacion);
 
-  // }
+      if(this.grafica)
+      {
+        this.grafica.destroy();
+      }
+
+      this.grafica=new Chart('graficaEvolucion',{
+        type:'line',
+        data:{
+          labels:ejeXFecha,
+          datasets:[
+          {
+            label:'Puntacion',
+            data:ejeYPuntuacion,
+            borderColor:'rgb(75, 192, 192)',
+            backgroundColor: 'rgba(75, 192, 192, 0.2)',
+            tension:0.3
+          }
+          ]
+        },
+      })
+  }
 }
 export default EvaluacionesPeriodicasComponent;

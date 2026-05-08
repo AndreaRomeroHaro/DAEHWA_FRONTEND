@@ -25,4 +25,8 @@ export class PlanIntervencionService{
     listarPlan_Intervencion():Observable<Plan_Intervencion[]>{
     return this.http.get<Plan_Intervencion[]>(this.enlaceApi);
     }
+
+    eliminarPlan_Intervencion(id:number){
+        return this.http.delete(`${this.enlaceApi}${id}/`);
+    }
 }

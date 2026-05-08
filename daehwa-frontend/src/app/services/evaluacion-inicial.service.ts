@@ -25,4 +25,8 @@ export class EvaluacionInicialService{
     listarEvaluacion():Observable<EvaluacionInicial[]>{
     return this.http.get<EvaluacionInicial[]>(this.enlaceApi);
     }
+
+    eliminarEvaluacion_Inicial(id:number){
+        return this.http.delete(`${this.enlaceApi}${id}/`);
+    }
 }

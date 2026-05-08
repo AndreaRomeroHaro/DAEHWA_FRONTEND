@@ -22,8 +22,9 @@ export class DiagnosticoFuncionalComponent implements OnInit {
     recomendaciones:''
   };
 
-  diagnosticoSeleccionado:DiagnosticoFuncional |null=null;
+  diagnosticoDetalle:number |null=null;
   editar=false;
+  
   constructor(private diagnosticoServicio:DiagnosticoFuncionalService){}
   
   ngOnInit(): void {
