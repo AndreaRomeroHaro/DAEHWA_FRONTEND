@@ -19,11 +19,11 @@ export class PlanIntervencionComponent implements OnInit{
     id_plan_intervencion:0,
     objetivos_especificos:'',
     contenidos:'',
-    frecuencia:1,
-    duracion_sesiones:30,
+    frecuencia:0,
+    duracion_sesiones:0,
   }
 
-  plan_intervencion_seleccionado:Plan_Intervencion|null=null;
+  detallePlan_Intervencion: number |null=null;
   editar=false;
   
   constructor(private plan_intervencionServicio:PlanIntervencionService){}
@@ -37,18 +37,15 @@ export class PlanIntervencionComponent implements OnInit{
   }
 
   crearPlan_Intervencion():void{
-    if(this.editar && this.nuevoPlan_intervencion.id_plan_intervencion){
-      this.plan_intervencionServicio.editarPlan_Intervencion(this.nuevoPlan_intervencion.id_plan_intervencion,this.nuevoPlan_intervencion).subscribe(()=>{
-        this.editar=false;
-        this.resetearFormulario();
-        this.cargarPlan_Intervencion();
-      });
-    }else{
-      this.plan_intervencionServicio.crearPlan_Intervencion(this.nuevoPlan_intervencion).subscribe(()=>{
-        this.resetearFormulario();
-        this.cargarPlan_Intervencion();
-      });
-    }
+    const peticion=this.editar && this.nuevoPlan_intervencion.id_plan_intervencion
+    ? this.plan_intervencionServicio.editarPlan_Intervencion(this.nuevoPlan_intervencion.id_plan_intervencion,this.nuevoPlan_intervencion)
+    :this.plan_intervencionServicio.crearPlan_Intervencion(this.nuevoPlan_intervencion);
+
+    peticion.subscribe(()=>{
+      this.editar=false;
+      this.resetearFormulario();
+      this.cargarPlan_Intervencion();
+    })
   }
 
   editarPlan_Intervencion(id:number):void{
@@ -57,10 +54,13 @@ export class PlanIntervencionComponent implements OnInit{
       this.editar=true;
     })
   }
-  consultarPlan_Intervencion(id:number):void{
-    this.plan_intervencionServicio.consultarPlan_Intervencion(id).subscribe(plan_intervencion=>{
-      this.plan_intervencion_seleccionado=plan_intervencion;
-    });
+
+  eliminarPlan(id:number):void{
+    this.plan_intervencionServicio.eliminarPlan_Intervencion(id).subscribe(()=>this.cargarPlan_Intervencion());
+  }
+  
+  detallePlan(id:number):void{
+    this.detallePlan_Intervencion=this.detallePlan_Intervencion===id?null:id;
   }
 
   resetearFormulario():void{
@@ -68,8 +68,8 @@ export class PlanIntervencionComponent implements OnInit{
       id_plan_intervencion:0,
       objetivos_especificos:'',
       contenidos:'',
-      frecuencia:1,
-      duracion_sesiones:30,
+      frecuencia:0,
+      duracion_sesiones:0,
     }
   }
 }

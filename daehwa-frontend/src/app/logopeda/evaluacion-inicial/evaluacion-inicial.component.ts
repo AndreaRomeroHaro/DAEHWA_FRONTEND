@@ -24,7 +24,7 @@ export class EvaluacionInicialComponent implements OnInit{
     archivos_adjuntos:[]
   };
 
-  evaluacionSeleccionada:EvaluacionInicial|null=null;
+  evaluacionDetalle:number |null=null;
   editar=false;
 
   constructor(private evaluacionServicio:EvaluacionInicialService){}
@@ -43,18 +43,15 @@ export class EvaluacionInicialComponent implements OnInit{
   }
 
   crearEvaluacion():void{
-    if(this.editar && this.nuevaEvaluacion.id_evaluacion){
-      this.evaluacionServicio.editarEvaluacion(this.nuevaEvaluacion.id_evaluacion,this.nuevaEvaluacion).subscribe(()=>{
-        this.editar=false;
-        this.resetearFormulario();
-        this.cargarEvaluaciones();
-      });
-    }else{
-      this.evaluacionServicio.crearEvaluacion(this.nuevaEvaluacion).subscribe(()=>{
-        this.resetearFormulario();
-        this.cargarEvaluaciones();
-      });
-    }
+    const peticion=this.editar&&this.nuevaEvaluacion.id_evaluacion
+    ?this.evaluacionServicio.editarEvaluacion(this.nuevaEvaluacion.id_evaluacion,this.nuevaEvaluacion)
+    :this.evaluacionServicio.crearEvaluacion(this.nuevaEvaluacion);
+
+    peticion.subscribe(()=>{
+      this.editar=false;
+      this.resetearFormulario();
+      this.cargarEvaluaciones();
+    })
   }
 
   editarEvaluacion(id:number):void{
@@ -63,10 +60,13 @@ export class EvaluacionInicialComponent implements OnInit{
       this.editar=true;
     })
   }
-  consultarEvaluacion(id:number):void{
-    this.evaluacionServicio.consultarEvaluacion(id).subscribe(evaluacion=>{
-      this.evaluacionSeleccionada=evaluacion;
-    });
+
+  eliminarEvaluacion(id:number):void{
+    this.evaluacionServicio.eliminarEvaluacion_Inicial(id).subscribe(()=>this.cargarEvaluaciones());
+  }
+
+  detalleEvaluacion(id:number):void{
+    this.evaluacionDetalle=this.evaluacionDetalle===id ?null:id;
   }
 
   resetearFormulario():void{

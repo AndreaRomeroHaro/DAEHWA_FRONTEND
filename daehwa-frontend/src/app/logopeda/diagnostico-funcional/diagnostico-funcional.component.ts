@@ -24,7 +24,7 @@ export class DiagnosticoFuncionalComponent implements OnInit {
 
   diagnosticoDetalle:number |null=null;
   editar=false;
-  
+
   constructor(private diagnosticoServicio:DiagnosticoFuncionalService){}
   
   ngOnInit(): void {
@@ -35,24 +35,21 @@ export class DiagnosticoFuncionalComponent implements OnInit {
     this.diagnosticoServicio.listarDiagnosticos().subscribe(diagnostico=>{this.diagnosticos=diagnostico})
   }
 
-  actualizarFecha(fecha:string):void{
+  transformarFecha(fecha:string):void{
     this.nuevoDiagnostico.fecha=new Date(fecha);
   }
 
   crearDiagnostico():void{
-    if(this.editar && this.nuevoDiagnostico.id_diagnostico){
-      this.diagnosticoServicio.editarDiagnostico(this.nuevoDiagnostico.id_diagnostico,this.nuevoDiagnostico).subscribe(()=>{
+    const peticion= this.editar && this.nuevoDiagnostico.id_diagnostico
+                    ?this.diagnosticoServicio.editarDiagnostico(this.nuevoDiagnostico.id_diagnostico,this.nuevoDiagnostico)
+                    :this.diagnosticoServicio.crearDiagnostico(this.nuevoDiagnostico);
+    
+    peticion.subscribe(()=>{
         this.editar=false;
         this.resetearFormulario();
         this.cargarDiagnosticos();
-      });
-    }else{
-      this.diagnosticoServicio.crearDiagnostico(this.nuevoDiagnostico).subscribe(()=>{
-        this.resetearFormulario();
-        this.cargarDiagnosticos();
-      });
+      })
     }
-  }
 
   editarDiagnostico(id:number):void{
     this.diagnosticoServicio.consultarDiagnostico(id).subscribe(diagnostico=>{
@@ -60,12 +57,13 @@ export class DiagnosticoFuncionalComponent implements OnInit {
       this.editar=true;
     })
   }
-  consultarDiagnostico(id:number):void{
-    this.diagnosticoServicio.consultarDiagnostico(id).subscribe(diagnostico=>{
-      this.diagnosticoSeleccionado=diagnostico;
-    })
-  }
 
+  eliminarDiagnostico(id:number):void{
+    this.diagnosticoServicio.eliminarDiagnostico_Funcional(id).subscribe(()=>this.cargarDiagnosticos());
+  }
+  diagnosticosDetalle(id:number):void{
+    this.diagnosticoDetalle=this.diagnosticoDetalle===id?null:id;
+  }
   resetearFormulario():void{
       this.nuevoDiagnostico={
       id_diagnostico:0,

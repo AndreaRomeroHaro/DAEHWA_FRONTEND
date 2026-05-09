@@ -1,100 +1,62 @@
 <div class="container mt-4">
-
   <h2 class="mb-4">Plan de Intervención</h2>
 
   <div class="card shadow-sm mb-4">
     <div class="card-body">
-      <h5 class="mb-3">
-        {{ editar ? 'Editar plan' : 'Nuevo plan' }}
-      </h5>
+      <h5 class="mb-3">{{editar ? 'Editar plan de intervención' : 'Nuevo plan de intervención'}}</h5>
 
       <div class="mb-3">
-        <label class="form-label">Objetivos específicos</label>
-        <textarea class="form-control" rows="3"
-          [(ngModel)]="nuevoPlan_intervencion.objetivos_especificos"></textarea>
-      </div>
-
-      <div class="mb-3">
-        <label class="form-label">Contenidos</label>
-        <textarea class="form-control" rows="3"
-          [(ngModel)]="nuevoPlan_intervencion.contenidos"></textarea>
+        <label class="form-label">Objetivos específicos:</label>
+        <textarea class="form-control" rows="2" [(ngModel)]="nuevoPlan_intervencion.objetivos_especificos"></textarea>
       </div>
 
       <div class="mb-3">
         <label class="form-label">Frecuencia (sesiones por semana)</label>
-        <input type="number" class="form-control"
-          [(ngModel)]="nuevoPlan_intervencion.frecuencia">
+        <input type="number" class="form-control" [(ngModel)]="nuevoPlan_intervencion.frecuencia">
       </div>
 
       <div class="mb-3">
-        <label class="form-label">Duración de las sesiones (minutos)</label>
-        <input type="number" class="form-control"
-          [(ngModel)]="nuevoPlan_intervencion.duracion_sesiones">
+        <label class="form-label">Duración de las sesiones(minutos)</label>
+        <input type="number" class="form-control" [(ngModel)]="nuevoPlan_intervencion.duracion_sesiones">
       </div>
 
-      <button class="btn btn-primary" (click)="crearPlan_Intervencion()">
-        {{ editar ? 'Guardar cambios' : 'Guardar plan' }}
-      </button>
+      <button class="btn btn-primary" (click)="crearPlan_Intervencion()">{{editar ? 'Guardar cambios': 'Guardar plan'}}</button>
+
     </div>
   </div>
 
-  <h4 class="mb-3">Planes registrados</h4>
+  <h4 class="mt-4 mb-3">Planes de intervención registrados</h4>
 
-  <ul class="list-group">
-    @for (plan of planes; track plan.id_plan_intervencion) {
-      <li class="list-group-item d-flex justify-content-between align-items-center">
-        <div>
-          <strong>ID:</strong> {{ plan.id_plan_intervencion }}<br>
-          {{ plan.objetivos_especificos | slice:0:50 }}...
+  <ul class="list-group" id="lista-plan-intervencion">
+    @for(plan of planes;track plan.id_plan_intervencion){
+      <li class="list-group-item">
+        <div class="d-flex justify-content between aling-items-center">
+          <div>
+            <strong>ID:{{plan.id_plan_intervencion}}</strong><br>
+            {{plan.objetivos_especificos | slice:0:50}}...
+          </div>
+
+          <div>
+            <button class="btn btn-sm btn-outline-primary me-2" (click)="detallePlan(plan.id_plan_intervencion)">{{detallePlan_Intervencion === plan.id_plan_intervencion ? 'Ocultar' : 'Ver detalles'}}</button>
+            <button class="btn btn-sm btn-outline-secondary me-2" (click)="editarPlan_Intervencion(plan.id_plan_intervencion)">Editar</button>
+            <button class="btn btn-sm btn-outline-danger me-2">Eliminar</button>
+          </div>
         </div>
-        <div>
-          <button class="btn btn-sm btn-outline-primary me-2"
-            data-bs-toggle="modal" data-bs-target="#modalPlan"
-            (click)="consultarPlan_Intervencion(plan.id_plan_intervencion)">
-            Ver
-          </button>
-          <button class="btn btn-sm btn-outline-secondary"
-            (click)="editarPlan_Intervencion(plan.id_plan_intervencion)">
-            Editar
-          </button>
-        </div>
-      </li>
-    } @empty {
-      <li class="list-group-item text-center text-muted">
-        No hay planes registrados.
+
+        @if(detallePlan_Intervencion===plan.id_plan_intervencion){
+          <div class="mt-3 border-top pt-3">
+            <p><strong>Objetivos específicos:</strong></p>
+            <p>{{plan.objetivos_especificos}}</p>
+
+            <p><strong>Contenidos:</strong></p>
+            <p>{{plan.contenidos}}</p>
+
+            <p><strong>Frecuencia:</strong></p>{{plan.frecuencia}}
+
+            <p><strong>Duración de las sesiones:</strong></p>{{plan.duracion_sesiones}}
+          </div>
+        }
       </li>
     }
   </ul>
-
-</div>
-
-<div class="modal fade" id="modalPlan" tabindex="-1">
-  <div class="modal-dialog modal-lg">
-    <div class="modal-content">
-
-      <div class="modal-header">
-        <h5 class="modal-title">Detalles del plan de intervención</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-      </div>
-
-      <div class="modal-body">
-        @if (plan_intervencion_seleccionado) {
-
-          <p><strong>ID:</strong> {{ plan_intervencion_seleccionado.id_plan_intervencion }}</p>
-
-          <p><strong>Objetivos específicos:</strong></p>
-          <p>{{ plan_intervencion_seleccionado.objetivos_especificos }}</p>
-
-          <p><strong>Contenidos:</strong></p>
-          <p>{{ plan_intervencion_seleccionado.contenidos }}</p>
-
-          <p><strong>Frecuencia:</strong> {{ plan_intervencion_seleccionado.frecuencia }} sesiones/semana</p>
-
-          <p><strong>Duración de las sesiones:</strong> {{ plan_intervencion_seleccionado.duracion_sesiones }} minutos</p>
-
-        }
-      </div>
-
-    </div>
-  </div>
 </div>
