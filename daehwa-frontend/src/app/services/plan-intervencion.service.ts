@@ -1,32 +1,32 @@
 import { Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import { Observable } from "rxjs";
-import { Plan_Intervencion } from "../models/Plan_Intervencion";
+import { PlanIntervencion } from "../models/Plan_Intervencion";
 
-@Injectable({providedIn:'root'})
+@Injectable({ providedIn: 'root' })
+export class PlanIntervencionService {
 
-export class PlanIntervencionService{
-    private enlaceApi='http://127.0.0.1:8000/api/plan-intervencion/';
+  private enlaceApi = 'http://127.0.0.1:8000/api/planes-intervencion/';
 
-    constructor(private http:HttpClient){}
+  constructor(private http: HttpClient) {}
 
-    crearPlan_Intervencion(plan_intervencion:Plan_Intervencion):Observable<Plan_Intervencion>{
-        return this.http.post<Plan_Intervencion>(this.enlaceApi,plan_intervencion)
-    }
+  crearPlanIntervencion(plan: PlanIntervencion): Observable<PlanIntervencion> {
+    return this.http.post<PlanIntervencion>(this.enlaceApi, plan);
+  }
 
-    editarPlan_Intervencion(id:number,plan_intervencion:Plan_Intervencion):Observable<Plan_Intervencion>{
-    return this.http.post<Plan_Intervencion>(`${this.enlaceApi}${id}/`, plan_intervencion);
-    }
+  editarPlanIntervencion(id: number, plan: PlanIntervencion): Observable<PlanIntervencion> {
+    return this.http.put<PlanIntervencion>(`${this.enlaceApi}${id}/`, plan);
+  }
 
-    consultarPlan_Intervencion(id:number):Observable<Plan_Intervencion>{
-    return this.http.get<Plan_Intervencion>(`${this.enlaceApi}${id}/`);
-    }
+  consultarPlanIntervencion(id: number): Observable<PlanIntervencion> {
+    return this.http.get<PlanIntervencion>(`${this.enlaceApi}${id}/`);
+  }
 
-    listarPlan_Intervencion(idPaciente:number){
-        return this.http.get<Plan_Intervencion[]>(`${this.enlaceApi}paciente/${idPaciente}/`);
-    }
+  listarPlanIntervencion(): Observable<PlanIntervencion[]> {
+    return this.http.get<PlanIntervencion[]>(this.enlaceApi);
+  }
 
-    eliminarPlan_Intervencion(id:number){
-        return this.http.delete(`${this.enlaceApi}${id}/`);
-    }
+  eliminarPlanIntervencion(id: number) {
+    return this.http.delete(`${this.enlaceApi}${id}/`);
+  }
 }

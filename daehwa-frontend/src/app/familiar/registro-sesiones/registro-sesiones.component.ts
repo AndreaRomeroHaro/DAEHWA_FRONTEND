@@ -29,7 +29,7 @@ export class RegistroSesionesComponent implements OnInit {
     this.cargando=true;
     this.error=null;
 
-    this.sesionService.listarRegistro_Sesiones(this.idPaciente).subscribe({
+    this.sesionService.listarRegistro_Sesiones().subscribe({
       next:(data:RegistroSesion[]) => {
         this.sesiones=data;
         this.cargando=false;

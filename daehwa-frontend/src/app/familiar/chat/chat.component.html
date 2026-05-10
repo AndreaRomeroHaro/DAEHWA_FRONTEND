@@ -8,9 +8,7 @@
 
                 <div class="mb-3">
 
-                    <strong>
-                        {{ mensaje.id_emisor === idFamiliar ? 'Tú' : 'Logopeda' }}
-                    </strong>
+                    <strong>{{ mensaje.emisor === idFamiliar ? 'Tú' : 'Logopeda' }}</strong>
 
                     <div>{{ mensaje.texto }}</div>
 

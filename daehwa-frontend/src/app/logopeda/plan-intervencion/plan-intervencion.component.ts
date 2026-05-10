@@ -1,80 +1,90 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { Plan_Intervencion } from '../../models/Plan_Intervencion';
+import { PlanIntervencion } from '../../models/Plan_Intervencion';
 import { PlanIntervencionService } from '../../services/plan-intervencion.service';
 import { ActivatedRoute } from '@angular/router';
 
-
 @Component({
   selector: 'app-plan-intervencion',
-  standalone:true,
-  imports:[CommonModule,FormsModule],
+  standalone: true,
+  imports: [CommonModule, FormsModule],
   templateUrl: './plan-intervencion.component.html',
   styleUrl: './plan-intervencion.component.css',
 })
-export class PlanIntervencionComponent implements OnInit{
-  
-  planes:Plan_Intervencion[]=[];
+export class PlanIntervencionComponent implements OnInit {
 
-  nuevoPlan_intervencion:Plan_Intervencion={
-    id_plan_intervencion:0,
-    objetivos_especificos:'',
-    contenidos:'',
-    frecuencia:0,
-    duracion_sesiones:0,
-  }
+  planes: PlanIntervencion[] = [];
 
-  detallePlan_Intervencion: number |null=null;
-  editar=false;
-  
-  idPaciente=0;
-  constructor(private plan_intervencionServicio:PlanIntervencionService,private route:ActivatedRoute){}
+  nuevoPlan: PlanIntervencion = {
+    id: 0,
+    paciente: 0,
+    objetivos_especificos: '',
+    contenidos: '',
+    frecuencia: 0,
+    duracion_sesiones: 0,
+  };
+
+  detallePlan: number | null = null;
+  editar = false;
+  idPaciente = 0;
+
+  constructor(
+    private planService: PlanIntervencionService,
+    private route: ActivatedRoute
+  ) {}
 
   ngOnInit(): void {
-      this.idPaciente = Number(this.route.snapshot.paramMap.get('idPaciente'));
-      this.cargarPlan_Intervencion();
+    this.idPaciente = Number(this.route.snapshot.paramMap.get('idPaciente'));
+    this.nuevoPlan.paciente = this.idPaciente;
+    this.cargarPlanes();
   }
 
-  cargarPlan_Intervencion():void{
-      this.plan_intervencionServicio.listarPlan_Intervencion(this.idPaciente).subscribe(plan => {this.planes = plan});
+  cargarPlanes(): void {
+    this.planService.listarPlanIntervencion().subscribe(planes => {
+      this.planes = planes.filter(p => p.paciente === this.idPaciente);
+    });
   }
 
-  crearPlan_Intervencion():void{
-    const peticion=this.editar && this.nuevoPlan_intervencion.id_plan_intervencion
-    ? this.plan_intervencionServicio.editarPlan_Intervencion(this.nuevoPlan_intervencion.id_plan_intervencion,this.nuevoPlan_intervencion)
-    :this.plan_intervencionServicio.crearPlan_Intervencion(this.nuevoPlan_intervencion);
+  crearPlan(): void {
+    const peticion = this.editar
+      ? this.planService.editarPlanIntervencion(this.nuevoPlan.id, this.nuevoPlan)
+      : this.planService.crearPlanIntervencion(this.nuevoPlan);
 
-    peticion.subscribe(()=>{
-      this.editar=false;
+    peticion.subscribe(() => {
+      this.editar = false;
       this.resetearFormulario();
-      this.cargarPlan_Intervencion();
-    })
+      this.cargarPlanes();
+    });
   }
 
-  editarPlan_Intervencion(id:number):void{
-    this.plan_intervencionServicio.consultarPlan_Intervencion(id).subscribe(plan_intervencion=>{
-      this.nuevoPlan_intervencion={...plan_intervencion};
-      this.editar=true;
-    })
+  editarPlanIntervencion(id: number): void {
+    this.planService.consultarPlanIntervencion(id).subscribe(plan => {
+      this.nuevoPlan = { ...plan };
+      this.editar = true;
+    });
   }
 
-  eliminarPlan(id:number):void{
-    this.plan_intervencionServicio.eliminarPlan_Intervencion(id).subscribe(()=>this.cargarPlan_Intervencion());
-  }
-  
-  detallePlan(id:number):void{
-    this.detallePlan_Intervencion=this.detallePlan_Intervencion===id?null:id;
+  eliminarPlan(id: number): void {
+    this.planService.eliminarPlanIntervencion(id).subscribe(() => {
+      this.cargarPlanes();
+    });
   }
 
-  resetearFormulario():void{
-    this.nuevoPlan_intervencion={
-      id_plan_intervencion:0,
-      objetivos_especificos:'',
-      contenidos:'',
-      frecuencia:0,
-      duracion_sesiones:0,
-    }
+  verDetalle(id: number): void {
+    this.detallePlan = this.detallePlan === id ? null : id;
+  }
+
+  resetearFormulario(): void {
+    this.nuevoPlan = {
+      id: 0,
+      paciente: this.idPaciente,
+      objetivos_especificos: '',
+      contenidos: '',
+      frecuencia: 0,
+      duracion_sesiones: 0,
+    };
   }
 }
+
 export default PlanIntervencionComponent;

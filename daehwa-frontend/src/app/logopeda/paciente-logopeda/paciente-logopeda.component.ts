@@ -2,6 +2,8 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { PacienteLogopedaService } from '../../services/pacientes-logopeda.service';
+import { Paciente } from '../../models/Paciente';
+
 @Component({
   selector: 'app-paciente-logopeda',
   imports: [CommonModule],
@@ -10,7 +12,7 @@ import { PacienteLogopedaService } from '../../services/pacientes-logopeda.servi
 })
 export class PacienteLogopedaComponent implements OnInit{
 
-  pacientes:any[]=[];
+  pacientes: Paciente[] = [];
   constructor(private pacientesService:PacienteLogopedaService,
     private router:Router
   ){}

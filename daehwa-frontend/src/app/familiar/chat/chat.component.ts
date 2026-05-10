@@ -33,18 +33,18 @@ export class ChatFamiliarComponent implements OnInit {
   }
 
   cargarMensajes(): void {
-    this.chatService.obtenerMensajesPaciente(this.idFamiliar)
-      .subscribe(m => this.mensajes = m);
+    this.chatService.obtenerMensajes(this.idFamiliar, this.idLogopeda)
+    .subscribe(m => this.mensajes = m);
   }
+
 
   enviarMensaje(): void {
     if (!this.mensajeNuevo.trim()) return;
 
     const mensaje = {
-      id_emisor: this.idFamiliar,
-      id_receptor: this.idLogopeda,
+      emisor: this.idFamiliar,
+      receptor: this.idLogopeda,
       texto: this.mensajeNuevo,
-      fecha: new Date()
     };
 
     this.chatService.enviarMensaje(mensaje).subscribe(() => {

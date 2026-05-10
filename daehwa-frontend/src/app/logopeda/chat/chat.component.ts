@@ -34,18 +34,18 @@ export class ChatComponent implements OnInit {
   }
 
   cargarMensajes(): void {
-    this.chatService.obtenerMensajesPaciente(this.idFamiliar)
-      .subscribe(m => this.mensajes = m);
+  this.chatService.obtenerMensajes(this.idLogopeda, this.idFamiliar)
+    .subscribe(m => this.mensajes = m);
   }
+
 
   enviarMensaje(): void {
     if (!this.mensajeNuevo.trim()) return;
 
     const mensaje = {
-      id_emisor: this.idLogopeda,
-      id_receptor: this.idFamiliar,
+      emisor: this.idLogopeda,
+      receptor: this.idFamiliar,
       texto: this.mensajeNuevo,
-      fecha: new Date()
     };
 
     this.chatService.enviarMensaje(mensaje).subscribe(() => {

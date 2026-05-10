@@ -7,9 +7,7 @@
             @for (mensaje of mensajes; track mensaje.id_mensaje) {
 
                 <div class="mb-3">
-                    <strong>
-                        {{ mensaje.id_emisor === idLogopeda ? 'Tú' : 'Familiar' }}
-                    </strong>
+                    <strong>{{ mensaje.emisor === idLogopeda ? 'Tú' : 'Familiar' }}</strong>
                     <div>{{ mensaje.texto }}</div>
                     <div class="text-muted" id="fechaEstilo">
                         {{ mensaje.fecha | date:'short' }}
