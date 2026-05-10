@@ -20,6 +20,8 @@ export class AuthUserService{
             (tap(res=>{localStorage.setItem('token',res.token);
                     this.usuarioSubject.next(res.usuario);
                     localStorage.setItem('usuario',JSON.stringify(res.usuario));
+                
+                localStorage.setItem('id_usuario',res.usuario.id)
             })
         );
     }
@@ -47,5 +49,10 @@ export class AuthUserService{
     
     getToken(){
         return localStorage.getItem('token')
+    }
+
+    getUsuarioId():number{
+        const id=localStorage.getItem('id_usuario');
+        return id?Number(id):0;
     }
 }

@@ -1,7 +1,7 @@
 import { Component, inject,OnInit } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { Router, RouterLink } from "@angular/router";
-import { AuthUserService } from "../services/auth-user.service";
+import { AuthUserService } from "../services/authuser.service";
 import { Usuario } from "../models/usuario";
 
 @Component({

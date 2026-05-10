@@ -1,6 +1,6 @@
 import { Component, OnInit,inject} from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { AuthUserService } from './services/auth-user.service';
+import { AuthUserService } from './services/authuser.service';
 import { ComponenteNavbar } from "./navbar/navbar.component";
 import { ComponenteFooter } from "./footer/footer.component";
 
