@@ -11,12 +11,11 @@ export class ChatService{
 
     constructor(private http:HttpClient){}
     
-    obtenerMensaje(id_familiar:number):Observable<Mensaje[]>{
-        return this.http.get<Mensaje[]>(`${this.enlaceApi}mensajes/${id_familiar}`);
+    obtenerMensajesPaciente(idPaciente: number): Observable<any[]> {
+        return this.http.get<any[]>(`${this.enlaceApi}paciente/${idPaciente}/`);
     }
-
-    enviarMensaje(mensaje:Mensaje):Observable<Mensaje>{
-        return this.http.post<Mensaje>(`${this.enlaceApi}enviar/}`,mensaje)
+    enviarMensaje(mensaje: any): Observable<any> {
+        return this.http.post<any>(`${this.enlaceApi}`, mensaje);
     }
 
 }
