@@ -3,6 +3,8 @@ import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Plan_Intervencion } from '../../models/Plan_Intervencion';
 import { PlanIntervencionService } from '../../services/plan-intervencion.service';
+import { ActivatedRoute } from '@angular/router';
+
 
 @Component({
   selector: 'app-plan-intervencion',
@@ -26,14 +28,16 @@ export class PlanIntervencionComponent implements OnInit{
   detallePlan_Intervencion: number |null=null;
   editar=false;
   
-  constructor(private plan_intervencionServicio:PlanIntervencionService){}
+  idPaciente=0;
+  constructor(private plan_intervencionServicio:PlanIntervencionService,private route:ActivatedRoute){}
 
   ngOnInit(): void {
+      this.idPaciente = Number(this.route.snapshot.paramMap.get('idPaciente'));
       this.cargarPlan_Intervencion();
   }
 
   cargarPlan_Intervencion():void{
-    this.plan_intervencionServicio.listarPlan_Intervencion().subscribe(plan_intervencion=>{this.planes=plan_intervencion;});
+      this.plan_intervencionServicio.listarPlan_Intervencion(this.idPaciente).subscribe(plan => {this.planes = plan});
   }
 
   crearPlan_Intervencion():void{

@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RegistroSesion } from '../../models/Registro_Sesiones';
 import { RegistroSesionService } from '../../services/registro-sesiones.service';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-registro-sesiones',
@@ -28,14 +29,20 @@ export class RegistroSesionesComponent implements OnInit {
   registroDetalle:number |null=null;
   editar=false;
 
-  constructor(private sesionServicio:RegistroSesionService){}
+  idPaciente=0;
+
+  constructor(private sesionServicio:RegistroSesionService,private route:ActivatedRoute){}
 
   ngOnInit(): void {
-      this.cargarSesiones();
+    this.idPaciente=Number(this.route.snapshot.paramMap.get('idPaciente'))  
+    this.cargarSesiones();
   }
 
   cargarSesiones():void{
-    this.sesionServicio.listarRegistro_Sesiones().subscribe(sesion=>{this.sesiones=sesion;});
+    this.sesionServicio.listarRegistro_Sesiones(this.idPaciente)
+    .subscribe(sesion => {
+      this.sesiones = sesion;
+    });
   }
   
   transformarFecha(fecha:string):void{

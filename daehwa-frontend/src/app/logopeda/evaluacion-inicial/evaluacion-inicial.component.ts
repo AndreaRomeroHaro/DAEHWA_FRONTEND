@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { EvaluacionInicial } from '../../models/Evaluacion_Inicial';
 import { EvaluacionInicialService } from '../../services/evaluacion-inicial.service';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-evaluacion-inicial',
@@ -26,15 +27,17 @@ export class EvaluacionInicialComponent implements OnInit{
 
   evaluacionDetalle:number |null=null;
   editar=false;
+  idPaciente=0;
 
-  constructor(private evaluacionServicio:EvaluacionInicialService){}
+  constructor(private evaluacionServicio:EvaluacionInicialService,private route:ActivatedRoute){}
 
   ngOnInit(): void {
+      this.idPaciente = Number(this.route.snapshot.paramMap.get('idPaciente'));
       this.cargarEvaluaciones();
   }
 
   cargarEvaluaciones():void{
-    this.evaluacionServicio.listarEvaluacion().subscribe(evaluacion=>{this.evaluaciones=evaluacion;});
+    this.evaluacionServicio.listarEvaluacion(this.idPaciente).subscribe(evaluacion =>{this.evaluaciones = evaluacion;}); 
   }
 
   subirArchivos(event:any):void{

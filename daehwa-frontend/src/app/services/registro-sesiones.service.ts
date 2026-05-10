@@ -22,8 +22,8 @@ export class RegistroSesionService{
     return this.http.get<RegistroSesion>(`${this.enlaceApi}${id}/`);
     }
 
-    listarRegistro_Sesiones():Observable<RegistroSesion[]>{
-    return this.http.get<RegistroSesion[]>(this.enlaceApi);
+    listarRegistro_Sesiones(idPaciente:number){
+    return this.http.get<RegistroSesion[]>(`${this.enlaceApi}paciente/${idPaciente}/`);
     }
 
     eliminarRegistro_Sesiones(id:number){

@@ -2,13 +2,15 @@ import { Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import { Observable } from "rxjs";
 import { Cita } from "../models/Cita";
+import { AuthUserService } from "./authuser.service";
 
 @Injectable({providedIn:'root'})
 export class CitaService {
 
-  private enlaceApi='http://127.0.0.1:8000/api/cita-funcional';
+  private enlaceApi='http://127.0.0.1:8000/api/cita';
   
-  constructor(private http:HttpClient){}
+  constructor(private http:HttpClient, private authUser:AuthUserService){}
+  
   crearCita(cita:Cita):Observable<Cita>{
     return this.http.post<Cita>(this.enlaceApi,cita)
   }

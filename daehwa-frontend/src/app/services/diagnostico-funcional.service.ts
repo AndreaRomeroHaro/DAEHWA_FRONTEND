@@ -21,11 +21,11 @@ export class DiagnosticoFuncionalService {
     return this.http.get<DiagnosticoFuncional>(`${this.enlaceApi}${id}/`);
   }
 
-  listarDiagnosticos():Observable<DiagnosticoFuncional[]>{
-    return this.http.get<DiagnosticoFuncional[]>(this.enlaceApi);
+  listarDiagnostico(idPaciente:number) {
+      return this.http.get<DiagnosticoFuncional[]>(`${this.enlaceApi}paciente/${idPaciente}/`);
   }
 
   eliminarDiagnostico_Funcional(id:number){
         return this.http.delete(`${this.enlaceApi}${id}/`);
-    }
+  }
 }

@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { EvaluacionPeriodica } from '../../models/Evaluaciones_Periodicas';
 import { EvaluacionPeriodicaService } from '../../services/evaluaciones-periodica.service';
 import { Chart } from 'chart.js/auto';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-evaluaciones-periodicas',
@@ -27,16 +28,18 @@ export class EvaluacionesPeriodicasComponent implements OnInit{
   evaluacionDetalle: number | null=null;
   grafica: Chart | null=null;
   editar=false;
+  idPaciente=0;
 
-  constructor(private evaluacion_servicio:EvaluacionPeriodicaService){}
+  constructor(private evaluacion_servicio:EvaluacionPeriodicaService,private route:ActivatedRoute){}
 
   ngOnInit(): void {
+      this.idPaciente = Number(this.route.snapshot.paramMap.get('idPaciente'));
       this.cargarEvaluaciones();
   }
 
   cargarEvaluaciones():void{
-    this.evaluacion_servicio.listarEvaluacion().subscribe(evaluacion=>{this.evaluaciones=evaluacion;});
-  }
+    this.evaluacion_servicio.listarEvaluacion(this.idPaciente).subscribe(evaluacion =>{this.evaluaciones = evaluacion;}); 
+   }
   
   transformarFecha(fecha:string):void{
     this.nuevaEvaluacion.fecha=new Date(fecha);

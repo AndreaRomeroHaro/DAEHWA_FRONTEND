@@ -22,8 +22,8 @@ export class PlanIntervencionService{
     return this.http.get<Plan_Intervencion>(`${this.enlaceApi}${id}/`);
     }
 
-    listarPlan_Intervencion():Observable<Plan_Intervencion[]>{
-    return this.http.get<Plan_Intervencion[]>(this.enlaceApi);
+    listarPlan_Intervencion(idPaciente:number){
+        return this.http.get<Plan_Intervencion[]>(`${this.enlaceApi}paciente/${idPaciente}/`);
     }
 
     eliminarPlan_Intervencion(id:number){

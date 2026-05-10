@@ -22,8 +22,8 @@ export class EvaluacionPeriodicaService{
     return this.http.get<EvaluacionPeriodica>(`${this.enlaceApi}${id}/`);
     }
 
-    listarEvaluacion():Observable<EvaluacionPeriodica[]>{
-    return this.http.get<EvaluacionPeriodica[]>(this.enlaceApi);
+    listarEvaluacion(idPaciente:number) {
+        return this.http.get<EvaluacionPeriodica[]>(`${this.enlaceApi}paciente/${idPaciente}/`);
     }
 
     eliminarEvaluacion(id:number){
