@@ -1,1 +1,57 @@
-<p>registro-sesiones works!</p>
+<div class="container mt-4">
+
+  <h2 class="mb-4">Registro de Sesiones</h2>
+
+  @if (cargando) {
+    <p>Cargando sesiones...</p>
+  }
+
+  @if (error) {
+    <div class="alert alert-danger">{{ error }}</div>
+  }
+
+  @if (!cargando && !error && sesiones.length === 0) {
+    <p>No hay sesiones registradas todavía.</p>
+  }
+
+  @if (!cargando && !error && sesiones.length > 0) {
+
+    <ul class="list-group">
+
+      @for (sesion of sesiones; track sesion.id_sesion) {
+
+        <li class="list-group-item">
+
+          <strong>Fecha:</strong>
+          {{ sesion.fecha | date:'dd/MM/yyyy' }} <br>
+
+          <strong>Actividades:</strong>
+          {{ sesion.actividades }} <br>
+
+          <strong>Áreas trabajadas:</strong>
+          {{ sesion.areas.join(', ') }} <br>
+
+          <strong>Logros:</strong>
+          {{ sesion.logros }} <br>
+
+          <strong>Aspectos a mejorar:</strong>
+          {{ sesion.aspectos_mejorar }} <br>
+
+          <strong>Observaciones:</strong>
+          {{ sesion.observaciones }} <br>
+
+          @if (sesion.multimedia?.length) {
+            <div class="mt-2">
+              <strong>Multimedia:</strong>
+              <ul>
+                @for (file of sesion.multimedia; track file.name) {
+                  <li>{{ file.name }}</li>
+                }
+              </ul>
+            </div>
+          }
+        </li>
+      }
+    </ul>
+  }
+</div>

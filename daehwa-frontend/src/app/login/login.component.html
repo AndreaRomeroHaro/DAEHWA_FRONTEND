@@ -8,21 +8,13 @@
 
       <div class="mb-3">
         <label class="form-label">Correo electrónico</label>
-        <input type="email"
-               class="form-control login-input"
-               [(ngModel)]="email"
-               name="email"
-               required>
+        <input type="email" class="form-control login-input"  [(ngModel)]="email" name="email" required>
       </div>
 
       <div class="mb-3">
         <label class="form-label">Contraseña</label>
-        <input type="password"
-               class="form-control login-input"
-               [(ngModel)]="password"
-               name="password"
-               required>
-      </div>
+        <input type="password" class="form-control login-input" [(ngModel)]="password" name="password" required>
+     </div>
 
       @if (error) {
         <div class="alert alert-danger py-2 text-center">
@@ -30,9 +22,7 @@
         </div>
       }
 
-      <button type="submit" class="btn login-btn w-100 mt-2">
-        Entrar
-      </button>
+      <button type="submit" class="btn login-btn w-100 mt-2">Entrar</button>
 
     </form>
 

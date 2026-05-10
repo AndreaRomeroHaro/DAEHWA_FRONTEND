@@ -1,8 +1,9 @@
 import { Component } from '@angular/core';
+import { RouterOutlet } from '@angular/router';
 
 @Component({
   selector: 'app-familiar',
-  imports: [],
+  imports: [RouterOutlet],
   templateUrl: './familiar.component.html',
   styleUrl: './familiar.component.css',
 })

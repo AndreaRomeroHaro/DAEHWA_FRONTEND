@@ -1,10 +1,45 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { ActivatedRoute } from '@angular/router';
+import { RegistroSesionService } from '../../services/registro-sesiones.service';
+import { RegistroSesion } from '../../models/Registro_Sesiones';
 
 @Component({
   selector: 'app-registro-sesiones',
-  imports: [],
+  imports: [CommonModule],
   templateUrl: './registro-sesiones.component.html',
   styleUrl: './registro-sesiones.component.css',
 })
-export class RegistroSesionesComponent {}
+export class RegistroSesionesComponent implements OnInit {
+
+  idPaciente!:number;
+  sesiones:RegistroSesion[]=[];
+  cargando=true;
+  error:string|null=null;
+
+  constructor(private route: ActivatedRoute,private sesionService:RegistroSesionService){}
+
+  ngOnInit(): void {
+    this.idPaciente=Number(this.route.snapshot.paramMap.get('idPaciente'));
+    this.cargarSesiones();
+    this.sesiones=[];
+    this.cargando=false;   
+  }
+
+  cargarSesiones():void{
+    this.cargando=true;
+    this.error=null;
+
+    this.sesionService.listarRegistro_Sesiones(this.idPaciente).subscribe({
+      next: (data:RegistroSesion[]) => {
+        this.sesiones=data;
+        this.cargando=false;
+      },
+      error:()=>{
+        this.error="No se puede cargar las sesiones"
+      }
+    })
+
+  }
+}
 export default RegistroSesionesComponent;

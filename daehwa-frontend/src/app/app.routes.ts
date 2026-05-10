@@ -5,7 +5,7 @@ import { roleGuard } from './guards/role.guard';
 export const routes: Routes = [
     {path:'login',component:LoginComponent},
     {path:'logopeda',
-        // canActivate:[authGuard,roleGuard('L')],
+        canActivate:[authGuard,roleGuard('L')],
         loadComponent:()=>import('./logopeda/logopeda.component').then(m=>m.default),children:[
         {path:'pacientes', loadComponent:()=> import('./logopeda/paciente-logopeda/paciente-logopeda.component').then(m => m.default)},
         {path:'paciente/:idPaciente',loadComponent:()=>import('./logopeda/paciente-home/paciente-home.component').then(m => m.default)},
@@ -17,6 +17,17 @@ export const routes: Routes = [
         {path: 'paciente/:idPaciente/chat',loadComponent: () =>import('./logopeda/chat/chat.component').then(m => m.default)},
         { path: 'logopeda/calendario',loadComponent: () =>import('./logopeda/citas-logopeda/citas-logopeda.component').then(m => m.default)},
         {path:'',redirectTo:'pacientes',pathMatch:'full'}
+    ]},
+    {path:'familiar',
+        canActivate:[authGuard,roleGuard('F')],
+        loadComponent:()=>import('./familiar/familiar.component').then(m=>m.default),children:[
+        {path:'',loadComponent:()=>import('./familiar/familiar-home/familiar-home.component').then(m=>m.default)},
+        {path:'paciente/:idPaciente/diagnostico-funcional',loadComponent:()=>import('./familiar/diagnostico-funcional/diagnostico-funcional.component').then(m=>m.default)},
+        {path:'paciente/:idPaciente/evaluaciones-periodicas',loadComponent:()=>import('./familiar/evaluaciones-periodicas/evaluaciones-periodicas.component').then(m=>m.default)},
+        {path:'paciente/:idPaciente/plan-intervencion',loadComponent:()=>import('./familiar/plan-intervencion/plan-intervencion.component').then(m=>m.default)},
+        {path:'paciente/:idPaciente/registro-sesiones',loadComponent:()=>import('./familiar/registro-sesiones/registro-sesiones.component').then(m=>m.default)},
+        {path:'paciente/:idPaciente/chat',loadComponent:()=>import('./familiar/chat/chat.component').then(m=>m.default)},
+        {path:'paciente/:idPaciente/citas',loadComponent:()=>import('./familiar/citas-paciente/citas-paciente.component').then(m=>m.default)}
     ]},
     {path:'',redirectTo:'login',pathMatch:'full'},
     {path:'**',redirectTo:'login'}
