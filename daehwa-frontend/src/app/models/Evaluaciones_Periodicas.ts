@@ -1,8 +1,9 @@
 export interface EvaluacionPeriodica {
-    id_evaluacion:number;
-    fecha:Date;
-    areas:string;
-    instrumentos:string[];
-    cambios:string;
-    puntuacion:number;
+  id: number;
+  paciente: number;
+  fecha: string;
+  areas: string;
+  instrumentos: string;
+  cambios: string;
+  puntuacion: number;
 }
