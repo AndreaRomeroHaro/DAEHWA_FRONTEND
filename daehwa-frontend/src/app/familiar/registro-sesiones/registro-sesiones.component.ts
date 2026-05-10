@@ -13,17 +13,16 @@ import { RegistroSesion } from '../../models/Registro_Sesiones';
 export class RegistroSesionesComponent implements OnInit {
 
   idPaciente!:number;
-  sesiones:RegistroSesion[]=[];
+  sesiones: RegistroSesion[] = [];
   cargando=true;
   error:string|null=null;
+  detalleRegistro:number|null=null;
 
   constructor(private route: ActivatedRoute,private sesionService:RegistroSesionService){}
 
   ngOnInit(): void {
     this.idPaciente=Number(this.route.snapshot.paramMap.get('idPaciente'));
     this.cargarSesiones();
-    this.sesiones=[];
-    this.cargando=false;   
   }
 
   cargarSesiones():void{
@@ -31,15 +30,20 @@ export class RegistroSesionesComponent implements OnInit {
     this.error=null;
 
     this.sesionService.listarRegistro_Sesiones(this.idPaciente).subscribe({
-      next: (data:RegistroSesion[]) => {
+      next:(data:RegistroSesion[]) => {
         this.sesiones=data;
         this.cargando=false;
       },
       error:()=>{
-        this.error="No se puede cargar las sesiones"
+        this.error="No se puede cargar las sesiones";
+        this.cargando=false;
       }
     })
 
+  }
+
+  detalle_Registro(id: number):void{
+    this.detalleRegistro=this.detalleRegistro===id?null:id;
   }
 }
 export default RegistroSesionesComponent;

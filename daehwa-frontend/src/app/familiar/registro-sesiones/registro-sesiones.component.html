@@ -40,16 +40,15 @@
           <strong>Observaciones:</strong>
           {{ sesion.observaciones }} <br>
 
-          @if (sesion.multimedia?.length) {
-            <div class="mt-2">
-              <strong>Multimedia:</strong>
-              <ul>
-                @for (file of sesion.multimedia; track file.name) {
-                  <li>{{ file.name }}</li>
-                }
-              </ul>
-            </div>
-          }
+          <p><strong>Multimedia:</strong></p>
+            <ul>
+              @for (file of sesion.multimedia; track $index){
+                <li>{{file.name}}</li>
+              }@empty{
+                <li>No hay archivos adjuntos.</li>
+              }
+            </ul>
+
         </li>
       }
     </ul>

@@ -87,6 +87,15 @@
             <p><strong>Observaciones:</strong></p>
             <p>{{sesion.observaciones}}</p>
 
+            <p><strong>Multimedia:</strong></p>
+            <ul>
+              @for (file of sesion.multimedia; track $index){
+                <li>{{file.name}}</li>
+              }@empty{
+                <li>No hay archivos adjuntos.</li>
+              }
+            </ul>
+
           </div>
         }
       </li>
