@@ -14,8 +14,8 @@ export const routes: Routes = [
         {path:'paciente/:idPaciente/plan-intervencion',loadComponent:()=>import('./logopeda/plan-intervencion/plan-intervencion.component').then(m=>m.default)},
         {path:'paciente/:idPaciente/registro-sesiones',loadComponent:()=>import('./logopeda/registro-sesiones/registro-sesiones.component').then(m=>m.default)},
         {path:'paciente/:idPaciente/evaluaciones-periodicas',loadComponent:()=>import('./logopeda/evaluaciones-periodicas/evaluaciones-periodicas.component').then(m=>m.default)},
-        {path:'calendario',loadComponent:()=>import('./logopeda/calendario/calendario.component').then(m=>m.default)},
         {path: 'paciente/:idPaciente/chat',loadComponent: () =>import('./logopeda/chat/chat.component').then(m => m.default)},
+        { path: 'logopeda/calendario',loadComponent: () =>import('./logopeda/citas-logopeda/citas-logopeda.component').then(m => m.default)},
         {path:'',redirectTo:'pacientes',pathMatch:'full'}
     ]},
     {path:'',redirectTo:'login',pathMatch:'full'},

@@ -81,3 +81,4 @@ export class CitasLogopedaComponent implements OnInit{
     }
   }
 }
+export default CitasLogopedaComponent;
