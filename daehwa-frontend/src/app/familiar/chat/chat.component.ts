@@ -1,10 +1,57 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { ChatService } from '../../services/chat.service';
+import { ActivatedRoute } from '@angular/router';
+import { AuthUserService } from '../../services/authuser.service';
 
 @Component({
-  selector: 'app-chat',
-  imports: [],
+  selector: 'app-chat-familiar',
+  standalone: true,
+  imports: [CommonModule, FormsModule],
   templateUrl: './chat.component.html',
   styleUrl: './chat.component.css',
 })
-export class ChatComponent {}
-export default ChatComponent;
+export class ChatFamiliarComponent implements OnInit {
+
+  mensajes: any[] = [];
+  mensajeNuevo = '';
+
+  idLogopeda = 0;
+  idFamiliar = 0;
+
+  constructor(
+    private chatService: ChatService,
+    private route: ActivatedRoute,
+    private authUserService: AuthUserService
+  ) {}
+
+  ngOnInit(): void {
+    this.idLogopeda = Number(this.route.snapshot.paramMap.get('idLogopeda'));
+    this.idFamiliar = this.authUserService.getUsuarioId();
+    this.cargarMensajes();
+  }
+
+  cargarMensajes(): void {
+    this.chatService.obtenerMensajesPaciente(this.idFamiliar)
+      .subscribe(m => this.mensajes = m);
+  }
+
+  enviarMensaje(): void {
+    if (!this.mensajeNuevo.trim()) return;
+
+    const mensaje = {
+      id_emisor: this.idFamiliar,
+      id_receptor: this.idLogopeda,
+      texto: this.mensajeNuevo,
+      fecha: new Date()
+    };
+
+    this.chatService.enviarMensaje(mensaje).subscribe(() => {
+      this.mensajeNuevo = '';
+      this.cargarMensajes();
+    });
+  }
+}
+
+export default ChatFamiliarComponent;

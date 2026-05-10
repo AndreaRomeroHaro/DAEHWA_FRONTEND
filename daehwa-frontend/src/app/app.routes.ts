@@ -2,6 +2,7 @@ import { Routes } from '@angular/router';
 import { LoginComponent } from './login/login.component';
 import { authGuard } from './guards/auth.guards';
 import { roleGuard } from './guards/role.guard';
+import ComponenteFamiliar from './familiar/familiar.component';
 export const routes: Routes = [
     {path:'login',component:LoginComponent},
     {path:'logopeda',
@@ -20,8 +21,8 @@ export const routes: Routes = [
     ]},
     {path:'familiar',
         canActivate:[authGuard,roleGuard('F')],
-        loadComponent:()=>import('./familiar/familiar.component').then(m=>m.default),children:[
-        {path:'',loadComponent:()=>import('./familiar/familiar-home/familiar-home.component').then(m=>m.default)},
+        component:ComponenteFamiliar
+        ,children:[
         {path:'paciente/:idPaciente/diagnostico-funcional',loadComponent:()=>import('./familiar/diagnostico-funcional/diagnostico-funcional.component').then(m=>m.default)},
         {path:'paciente/:idPaciente/evaluaciones-periodicas',loadComponent:()=>import('./familiar/evaluaciones-periodicas/evaluaciones-periodicas.component').then(m=>m.default)},
         {path:'paciente/:idPaciente/plan-intervencion',loadComponent:()=>import('./familiar/plan-intervencion/plan-intervencion.component').then(m=>m.default)},
