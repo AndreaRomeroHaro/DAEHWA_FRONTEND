@@ -1,80 +1,54 @@
-<div class="container mt-4">
+@for (evaluacion of evaluaciones; track evaluacion.id) {
+  <li class="list-group-item">
 
-  <h2 class="mb-4">Evaluación Inicial</h2>
-
-  <div class="card shadow-sm mb-4">
-    <div class="card-body">
-      <h5 class="mb-3">{{editar ? 'Editar evaluación inicial' : 'Nueva evaluación inicial'}}</h5>
-      
-      <div class="mb-3">
-        <label class="form-label">Antecedentes clínicos</label>
-        <textarea class="form-control" rows="2" [(ngModel)]="nuevaEvaluacion.antecedentes_clinicos"></textarea>
+    <div class="d-flex justify-content-between align-items-center">
+      <div>
+        <strong>ID: {{ evaluacion.id }}</strong>
+        {{ evaluacion.antecedentes_clinicos | slice:0:50 }}
       </div>
 
-      <div class="mb-3">
-        <label class="form-label">Entorno familiar</label>
-        <textarea class="form-control" rows="2" [(ngModel)]="nuevaEvaluacion.entorno_familiar"></textarea>
-      </div>
-      
-      <div class="mb-3">
-        <label class="form-label">Pruebas realizadas</label>
-        <textarea class="form-control" rows="2" [(ngModel)]="nuevaEvaluacion.pruebas"></textarea>
-      </div>
-    
-      <div class="mb-3">
-        <label class="form-label">Archivos adjuntos</label>
-        <input type="file" class="form-control" multiple (change)="subirArchivos($event)">
-      </div>
-    
-      <button class="btn btn-primary" (click)="crearEvaluacion()">{{editar ? 'Guardar cambios' : 'Guardar evaluación'}}</button>
+      <div>
+        <button class="btn btn-sm btn-outline-primary me-2"
+                (click)="detalleEvaluacion(evaluacion.id)">
+          {{ evaluacionDetalle === evaluacion.id ? 'Ocultar' : 'Ver detalles' }}
+        </button>
 
+        <button class="btn btn-sm btn-outline-secondary me-2"
+                (click)="editarEvaluacion(evaluacion.id)">
+          Editar
+        </button>
+
+        <button class="btn btn-sm btn-outline-danger"
+                (click)="eliminarEvaluacion(evaluacion.id)">
+          Eliminar
+        </button>
+      </div>
     </div>
-  </div>
 
-  <h4 class="mt-4 mb-3">Evaluación iniciales registradas</h4>
+    @if (evaluacionDetalle === evaluacion.id) {
+      <div class="mt-3 border-top pt-3">
 
-  <ul class="list-group" id="lista-evaluacion-inicial">
-    @for (evaluacion of evaluaciones; track evaluacion.id_evaluacion)
-    {
-      <li class="list-group-item">
-        <div class="d-flex justify-content-between aling-items-center">
-          <div>
-            <strong>ID: {{evaluacion.id_evaluacion}}</strong>
-            {{evaluacion.antecedentes_clinicos |slice:0:50}}
-          </div>
+        <p><strong>Antecedentes clínicos:</strong></p>
+        <p>{{ evaluacion.antecedentes_clinicos }}</p>
 
-          <div>
-            <button class="btn btn-sm btn-outline-primary me-2" (click)="detalleEvaluacion(evaluacion.id_evaluacion)">{{evaluacionDetalle===evaluacion.id_evaluacion ? 'Ocultar' : 'Ver detalles'}}</button>
-            <button class="btn btn-sm btn-outline-secondary me-2" (click)="editarEvaluacion(evaluacion.id_evaluacion)">Editar</button>
-            <button class="btn btn-sm btn-outline-danger" (click)="eliminarEvaluacion(evaluacion.id_evaluacion)">Eliminar</button>
-          </div>
-        </div>
+        <p><strong>Entorno familiar:</strong></p>
+        <p>{{ evaluacion.entorno_familiar }}</p>
 
-        @if(evaluacionDetalle===evaluacion.id_evaluacion){
-          <div class="mt-3 border-top pt-3">
-            <p><strong>Antecedentes clínicos:</strong></p>
-            <p>{{evaluacion.antecedentes_clinicos}}</p>
+        <p><strong>Pruebas realizadas:</strong></p>
+        <p>{{ evaluacion.pruebas }}</p>
 
-            <p><strong>Entrono familiar:</strong></p>
-            <p>{{evaluacion.entorno_familiar}}</p>
+        <p><strong>Observación directa:</strong></p>
+        <p>{{ evaluacion.observacion_directa }}</p>
 
-            <p><strong>Pruebas realizadas:</strong></p>
-            <p>{{evaluacion.pruebas}}</p>
+        <p><strong>Archivo adjunto:</strong></p>
 
-            <p><strong>Observación directa</strong></p>
-            <p>{{evaluacion.observacion_directa}}</p>
-
-            <p><strong>Archivos adjuntos:</strong></p>
-            <ul>
-              @for (file of evaluacion.archivos_adjuntos; track $index){
-                <li>{{file.name}}</li>
-              }@empty{
-                <li>No hay archivos adjuntos.</li>
-              }
-            </ul>
-          </div>
+        @if (evaluacion.archivos_adjuntos) {
+          <a [href]="evaluacion.archivos_adjuntos" target="_blank">Ver archivo</a>
+        } @else {
+          <p>No hay archivo adjunto.</p>
         }
-      </li>
+
+      </div>
     }
-  </ul>
-</div>
+  </li>
+}

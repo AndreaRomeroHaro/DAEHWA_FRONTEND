@@ -29,16 +29,17 @@ export class EvaluacionesPeriodicasComponent implements OnInit{
     this.cargando=true;
     this.error=null;
 
-    this.evaluacionService.listarEvaluacion(this.idPaciente).subscribe({
-      next:(data:EvaluacionPeriodica[]) => {
-         this.evaluaciones=data;
-        this.cargando=false;
-      },
-     error:()=>{
-         this.error="No se puede cargar las sesiones";
-         this.cargando=false;
-       }
-    })
+    this.evaluacionService.listarEvaluacion().subscribe({
+    next: (data) => {
+      this.evaluaciones = data.filter(e => e.paciente === this.idPaciente);
+      this.cargando = false;
+    },
+    error: () => {
+      this.error = "No se pueden cargar las evaluaciones";
+      this.cargando = false;
+    }
+  });
+
 
   }
 

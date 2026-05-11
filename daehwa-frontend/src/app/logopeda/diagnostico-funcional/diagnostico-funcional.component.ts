@@ -7,73 +7,86 @@ import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-diagnostico-funcional',
-  standalone:true,
-  imports:[CommonModule,FormsModule],
+  standalone: true,
+  imports: [CommonModule, FormsModule],
   templateUrl: './diagnostico-funcional.component.html',
   styleUrl: './diagnostico-funcional.component.css',
 })
 export class DiagnosticoFuncionalComponent implements OnInit {
 
-  diagnosticos: DiagnosticoFuncional[] =[];
+  diagnosticos: DiagnosticoFuncional[] = [];
 
-  nuevoDiagnostico:DiagnosticoFuncional={
-    id_diagnostico:0,
-    fecha:new Date(),
-    diagnostico_funcional:'',
-    recomendaciones:''
+  nuevoDiagnostico: DiagnosticoFuncional = {
+    id: 0,
+    paciente: 0,
+    fecha: '',
+    diagnostico_funcional: '',
+    recomendaciones: ''
   };
 
-  diagnosticoDetalle:number |null=null;
-  editar=false;
-  idPaciente=0;
+  diagnosticoDetalle: number | null = null;
+  editar = false;
+  idPaciente = 0;
 
-  constructor(private diagnosticoServicio:DiagnosticoFuncionalService,private route:ActivatedRoute){}
-  
+  constructor(
+    private diagnosticoServicio: DiagnosticoFuncionalService,
+    private route: ActivatedRoute
+  ) {}
+
   ngOnInit(): void {
-      this.idPaciente = Number(this.route.snapshot.paramMap.get('idPaciente'));
+    this.idPaciente = Number(this.route.snapshot.paramMap.get('idPaciente'));
+    this.nuevoDiagnostico.paciente = this.idPaciente;
+    this.cargarDiagnosticos();
+  }
+
+  cargarDiagnosticos(): void {
+    this.diagnosticoServicio.listarDiagnostico().subscribe(data => {
+      this.diagnosticos = data.filter(d => d.paciente === this.idPaciente);
+    });
+  }
+
+  transformarFecha(fecha: string): void {
+    this.nuevoDiagnostico.fecha = fecha;
+  }
+
+  crearDiagnostico(): void {
+    const peticion = this.editar
+      ? this.diagnosticoServicio.editarDiagnostico(this.nuevoDiagnostico.id, this.nuevoDiagnostico)
+      : this.diagnosticoServicio.crearDiagnostico(this.nuevoDiagnostico);
+
+    peticion.subscribe(() => {
+      this.editar = false;
+      this.resetearFormulario();
       this.cargarDiagnosticos();
+    });
   }
 
-  cargarDiagnosticos():void{
-      this.diagnosticoServicio.listarDiagnostico(this.idPaciente).subscribe(diagnostico =>{this.diagnosticos = diagnostico;}); 
-    }
-
-  transformarFecha(fecha:string):void{
-    this.nuevoDiagnostico.fecha=new Date(fecha);
+  editarDiagnostico(id: number): void {
+    this.diagnosticoServicio.consultarDiagnostico(id).subscribe(diagnostico => {
+      this.nuevoDiagnostico = { ...diagnostico };
+      this.editar = true;
+    });
   }
 
-  crearDiagnostico():void{
-    const peticion= this.editar && this.nuevoDiagnostico.id_diagnostico
-                    ?this.diagnosticoServicio.editarDiagnostico(this.nuevoDiagnostico.id_diagnostico,this.nuevoDiagnostico)
-                    :this.diagnosticoServicio.crearDiagnostico(this.nuevoDiagnostico);
-    
-    peticion.subscribe(()=>{
-        this.editar=false;
-        this.resetearFormulario();
-        this.cargarDiagnosticos();
-      })
-    }
-
-  editarDiagnostico(id:number):void{
-    this.diagnosticoServicio.consultarDiagnostico(id).subscribe(diagnostico=>{
-      this.nuevoDiagnostico={...diagnostico};
-      this.editar=true;
-    })
+  eliminarDiagnostico(id: number): void {
+    this.diagnosticoServicio.eliminarDiagnostico(id).subscribe(() => {
+      this.cargarDiagnosticos();
+    });
   }
 
-  eliminarDiagnostico(id:number):void{
-    this.diagnosticoServicio.eliminarDiagnostico_Funcional(id).subscribe(()=>this.cargarDiagnosticos());
+  diagnosticosDetalle(id: number): void {
+    this.diagnosticoDetalle = this.diagnosticoDetalle === id ? null : id;
   }
-  diagnosticosDetalle(id:number):void{
-    this.diagnosticoDetalle=this.diagnosticoDetalle===id?null:id;
-  }
-  resetearFormulario():void{
-      this.nuevoDiagnostico={
-      id_diagnostico:0,
-      fecha:new Date(),
-      diagnostico_funcional:'',
-      recomendaciones:''
-    }
+
+  resetearFormulario(): void {
+    this.nuevoDiagnostico = {
+      id: 0,
+      paciente: this.idPaciente,
+      fecha: '',
+      diagnostico_funcional: '',
+      recomendaciones: ''
+    };
   }
 }
+
 export default DiagnosticoFuncionalComponent;

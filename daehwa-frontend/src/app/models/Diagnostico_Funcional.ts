@@ -1,6 +1,7 @@
-export interface DiagnosticoFuncional{
-    id_diagnostico:number;
-    fecha:Date;
-    diagnostico_funcional:string;
-    recomendaciones:string;
+export interface DiagnosticoFuncional {
+  id: number;
+  paciente: number;
+  fecha: string;
+  diagnostico_funcional: string;
+  recomendaciones: string;
 }

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component,OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { EvaluacionPeriodica } from '../../models/Evaluaciones_Periodicas';
 import { EvaluacionPeriodicaService } from '../../services/evaluaciones-periodica.service';
@@ -8,111 +8,112 @@ import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-evaluaciones-periodicas',
-  standalone:true,
-  imports:[CommonModule,FormsModule],
+  standalone: true,
+  imports: [CommonModule, FormsModule],
   templateUrl: './evaluaciones-periodicas.component.html',
   styleUrl: './evaluaciones-periodicas.component.css',
 })
-export class EvaluacionesPeriodicasComponent implements OnInit{
-  evaluaciones: EvaluacionPeriodica[]=[];
+export class EvaluacionesPeriodicasComponent implements OnInit {
 
-  nuevaEvaluacion:EvaluacionPeriodica={
-    id_evaluacion:0,
-    fecha:new Date(),
-    areas:'',
-    instrumentos:[],
-    cambios:'',
-    puntuacion:0
-  }
+  evaluaciones: EvaluacionPeriodica[] = [];
 
-  evaluacionDetalle: number | null=null;
-  grafica: Chart | null=null;
-  editar=false;
-  idPaciente=0;
+  nuevaEvaluacion: EvaluacionPeriodica = {
+    id: 0,
+    paciente: 0,
+    fecha: '',
+    areas: '',
+    instrumentos: '',
+    cambios: '',
+    puntuacion: 0
+  };
 
-  constructor(private evaluacion_servicio:EvaluacionPeriodicaService,private route:ActivatedRoute){}
+  evaluacionDetalle: number | null = null;
+  grafica: Chart | null = null;
+  editar = false;
+  idPaciente = 0;
+
+  constructor(
+    private evaluacionServicio: EvaluacionPeriodicaService,
+    private route: ActivatedRoute
+  ) {}
 
   ngOnInit(): void {
-      this.idPaciente = Number(this.route.snapshot.paramMap.get('idPaciente'));
-      this.cargarEvaluaciones();
+    this.idPaciente = Number(this.route.snapshot.paramMap.get('idPaciente'));
+    this.nuevaEvaluacion.paciente = this.idPaciente;
+    this.cargarEvaluaciones();
   }
 
-  cargarEvaluaciones():void{
-    this.evaluacion_servicio.listarEvaluacion(this.idPaciente).subscribe(evaluacion =>{this.evaluaciones = evaluacion;}); 
-   }
-  
-  transformarFecha(fecha:string):void{
-    this.nuevaEvaluacion.fecha=new Date(fecha);
+  cargarEvaluaciones(): void {
+    this.evaluacionServicio.listarEvaluacion().subscribe(data => {
+      this.evaluaciones = data.filter(e => e.paciente === this.idPaciente);
+    });
   }
 
-  transformarInstrumentos(instrumentos:string):void{
-    this.nuevaEvaluacion.instrumentos=instrumentos.split(',').map(i=>i.trim());
-  }
+  crearEvaluacion(): void {
+    const peticion = this.editar
+      ? this.evaluacionServicio.editarEvaluacion(this.nuevaEvaluacion.id, this.nuevaEvaluacion)
+      : this.evaluacionServicio.crearEvaluacion(this.nuevaEvaluacion);
 
-  crearEvaluacion():void{
-    const peticion=this.editar&&this.nuevaEvaluacion.id_evaluacion ?
-    this.evaluacion_servicio.editarEvaluacion(this.nuevaEvaluacion.id_evaluacion,this.nuevaEvaluacion):
-    this.evaluacion_servicio.crearEvaluacion(this.nuevaEvaluacion);
-
-    peticion.subscribe(()=>{
-      this.editar=false;
+    peticion.subscribe(() => {
+      this.editar = false;
       this.resetearFormulario();
       this.cargarEvaluaciones();
-    })
+    });
   }
 
-  editarEvaluacion(id:number):void{
-    this.evaluacion_servicio.consultarEvaluacion(id).subscribe(evaluacion=>{
-      this.nuevaEvaluacion={...evaluacion};
-      this.editar=true;
-    })
+  editarEvaluacion(id: number): void {
+    this.evaluacionServicio.consultarEvaluacion(id).subscribe(evaluacion => {
+      this.nuevaEvaluacion = { ...evaluacion };
+      this.editar = true;
+    });
   }
 
-  eliminarEvaluacion(id:number):void{
-    this.evaluacion_servicio.eliminarEvaluacion(id).subscribe(()=>{
+  eliminarEvaluacion(id: number): void {
+    this.evaluacionServicio.eliminarEvaluacion(id).subscribe(() => {
       this.cargarEvaluaciones();
-    })
+    });
   }
 
-  detallesEvaluacion(id:number):void{
-    this.evaluacionDetalle=this.evaluacionDetalle=== id ? null:id;
+  detallesEvaluacion(id: number): void {
+    this.evaluacionDetalle = this.evaluacionDetalle === id ? null : id;
   }
 
-  resetearFormulario():void{
-    this.nuevaEvaluacion={
-      id_evaluacion:0,
-      fecha:new Date(),
-      areas:'',
-      instrumentos:[],
-      cambios:'',
-      puntuacion:0
+  resetearFormulario(): void {
+    this.nuevaEvaluacion = {
+      id: 0,
+      paciente: this.idPaciente,
+      fecha: '',
+      areas: '',
+      instrumentos: '',
+      cambios: '',
+      puntuacion: 0
+    };
+  }
+
+  generarGrafica() {
+    const ejeXFecha = this.evaluaciones.map(e => new Date(e.fecha).toLocaleDateString());
+    const ejeYPuntuacion = this.evaluaciones.map(e => e.puntuacion);
+
+    if (this.grafica) {
+      this.grafica.destroy();
     }
-  }
 
-  generarGrafica(){
-      const ejeXFecha=this.evaluaciones.map(evaluacion=>new Date(evaluacion.fecha).toLocaleDateString());
-      const ejeYPuntuacion=this.evaluaciones.map(evaluacion=>evaluacion.puntuacion);
-
-      if(this.grafica)
-      {
-        this.grafica.destroy();
-      }
-
-      this.grafica=new Chart('graficaEvolucion',{
-        type:'line',
-        data:{
-          labels:ejeXFecha,
-          datasets:[
+    this.grafica = new Chart('graficaEvolucion', {
+      type: 'line',
+      data: {
+        labels: ejeXFecha,
+        datasets: [
           {
-            label:'Puntacion',
-            data:ejeYPuntuacion,
-            borderColor:'rgb(75, 192, 192)',
+            label: 'Puntuación',
+            data: ejeYPuntuacion,
+            borderColor: 'rgb(75, 192, 192)',
             backgroundColor: 'rgba(75, 192, 192, 0.2)',
-            tension:0.3
+            tension: 0.3
           }
-          ]
-        },
-      })
+        ]
+      }
+    });
   }
 }
+
 export default EvaluacionesPeriodicasComponent;

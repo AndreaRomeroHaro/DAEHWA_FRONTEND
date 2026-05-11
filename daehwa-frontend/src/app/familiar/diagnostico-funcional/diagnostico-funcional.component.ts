@@ -28,15 +28,17 @@ export class DiagnosticoFuncionalComponent implements OnInit{
       this.cargando=true;
       this.error=null;
   
-      this.diagnosticoService.consultarDiagnostico(this.idPaciente).subscribe({
-        next: (data:DiagnosticoFuncional) => {
-          this.diagnostico=data;
-          this.cargando=false;
-        },
-        error:()=>{
-          this.error="No se puede cargar las sesiones"
-        }
-      })
+      this.diagnosticoService.listarDiagnostico().subscribe({
+      next: (data) => {
+        this.diagnostico = data.find(d => d.paciente === this.idPaciente) || null;
+        this.cargando = false;
+      },
+      error: () => {
+        this.error = "No se puede cargar el diagnóstico";
+        this.cargando = false;
+      }
+    });
+
   
     }
 }
