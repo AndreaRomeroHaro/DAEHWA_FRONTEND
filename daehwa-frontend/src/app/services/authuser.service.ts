@@ -6,30 +6,40 @@ import { BehaviorSubject,tap } from "rxjs";
     providedIn:'root'
 })
 export class AuthUserService{
-    private apiUrl='http://127.0.0.1:8000/api/login/'
+
+    private apiUrl='http://127.0.0.1:8000/api/token/';
 
     private usuarioSubject = new BehaviorSubject<any>(null);
     usuario$=this.usuarioSubject.asObservable();
 
-    constructor (private http: HttpClient){
+    constructor (private http: HttpClient){}
 
-    }
+    login(username: string, password: string) {
+    return this.http.post<any>(this.apiUrl, { username, password }).pipe(
+      tap(res => {
+        localStorage.setItem('access', res.access);
+        localStorage.setItem('refresh', res.refresh);
 
-    login(email:string, password:string){
-        return this.http.post<any>(this.apiUrl,{email,password}).pipe
-            (tap(res=>{localStorage.setItem('token',res.token);
-                    this.usuarioSubject.next(res.usuario);
-                    localStorage.setItem('usuario',JSON.stringify(res.usuario));
-                
-                localStorage.setItem('id_usuario',res.usuario.id)
-            })
-        );
-    }
+        const payloadBase64 = res.access.split('.')[1];
+        const payloadDecoded = JSON.parse(atob(payloadBase64));
+        localStorage.setItem('id_usuario', payloadDecoded.user_id); 
+
+        const usuario = {
+          username: username,
+          rol: payloadDecoded.rol 
+        };
+
+        this.usuarioSubject.next(usuario);
+        localStorage.setItem('usuario', JSON.stringify(usuario));
+      })
+    );
+  }
+
 
     cargarUsuarioDesdeStorage(){
         const usuario=localStorage.getItem('usuario');
         if(usuario){
-            this.usuarioSubject.next(JSON.parse(usuario))
+            this.usuarioSubject.next(JSON.parse(usuario));
         }
     }
 
@@ -38,17 +48,18 @@ export class AuthUserService{
     }
 
     logout(){
-        localStorage.removeItem('token');
+        localStorage.removeItem('access');
+        localStorage.removeItem('refresh');
         localStorage.removeItem('usuario');
         this.usuarioSubject.next(null);
     }
 
     estaLogeado():boolean{
-        return !!localStorage.getItem('token');
+        return !!localStorage.getItem('access');
     }
-    
+
     getToken(){
-        return localStorage.getItem('token')
+        return localStorage.getItem('access');
     }
 
     getUsuarioId():number{

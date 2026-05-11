@@ -14,12 +14,11 @@ export class PacienteLogopedaService{
     constructor(private http:HttpClient,private authUser:AuthUserService){}
 
     obtenerPacientes(): Observable<Paciente[]> {
-        const idLogopeda=this.authUser.getUsuarioId();
-        return this.http.get<Paciente[]>(`${this.enlaceApi}${idLogopeda}/pacientes/`);
-    }
+      return this.http.get<Paciente[]>('http://127.0.0.1:8000/api/pacientes/');
+  }
 
-    obtenerPaciente(idPaciente: number): Observable<Paciente> {
-        return this.http.get<Paciente>(`http://127.0.0.1:8000/api/pacientes/${idPaciente}/`);
-    }
+  obtenerPaciente(idPaciente: number): Observable<Paciente> {
+      return this.http.get<Paciente>(`http://127.0.0.1:8000/api/pacientes/${idPaciente}/`);
+  }
 
 }

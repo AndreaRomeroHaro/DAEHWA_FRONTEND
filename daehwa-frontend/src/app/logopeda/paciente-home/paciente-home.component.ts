@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Paciente } from '../../models/Paciente';
 import { PacienteLogopedaService } from '../../services/pacientes-logopeda.service';
@@ -11,7 +11,7 @@ import { PacienteLogopedaService } from '../../services/pacientes-logopeda.servi
   templateUrl: './paciente-home.component.html',
   styleUrl: './paciente-home.component.css',
 })
-export class PacienteHomeComponent {
+export class PacienteHomeComponent implements OnInit { 
 
   idPaciente = 0;
   paciente: Paciente | null = null;
@@ -22,7 +22,9 @@ export class PacienteHomeComponent {
     private pacienteService: PacienteLogopedaService
   ) {
     this.idPaciente = Number(this.route.snapshot.paramMap.get('idPaciente'));
+  }
 
+  ngOnInit(): void {
     this.pacienteService.obtenerPaciente(this.idPaciente)
       .subscribe(p => this.paciente = p);
   }
@@ -31,5 +33,4 @@ export class PacienteHomeComponent {
     this.router.navigate([`/logopeda/paciente/${this.idPaciente}/${ruta}`]);
   }
 }
-
 export default PacienteHomeComponent;

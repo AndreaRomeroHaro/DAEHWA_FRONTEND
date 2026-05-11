@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { PlanIntervencion } from '../../models/Plan_Intervencion';
 import { PlanIntervencionService } from '../../services/plan-intervencion.service';
 import { ActivatedRoute } from '@angular/router';
+import { ChangeDetectorRef } from '@angular/core';
 
 @Component({
   selector: 'app-plan-intervencion',
@@ -31,7 +32,8 @@ export class PlanIntervencionComponent implements OnInit {
 
   constructor(
     private planService: PlanIntervencionService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -43,6 +45,7 @@ export class PlanIntervencionComponent implements OnInit {
   cargarPlanes(): void {
     this.planService.listarPlanIntervencion().subscribe(planes => {
       this.planes = planes.filter(p => p.paciente === this.idPaciente);
+      this.cdr.detectChanges(); 
     });
   }
 

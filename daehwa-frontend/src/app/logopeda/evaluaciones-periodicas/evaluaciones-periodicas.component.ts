@@ -5,6 +5,7 @@ import { EvaluacionPeriodica } from '../../models/Evaluaciones_Periodicas';
 import { EvaluacionPeriodicaService } from '../../services/evaluaciones-periodica.service';
 import { Chart } from 'chart.js/auto';
 import { ActivatedRoute } from '@angular/router';
+import { ChangeDetectorRef } from '@angular/core';
 
 @Component({
   selector: 'app-evaluaciones-periodicas',
@@ -34,7 +35,8 @@ export class EvaluacionesPeriodicasComponent implements OnInit {
 
   constructor(
     private evaluacionServicio: EvaluacionPeriodicaService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -46,6 +48,11 @@ export class EvaluacionesPeriodicasComponent implements OnInit {
   cargarEvaluaciones(): void {
     this.evaluacionServicio.listarEvaluacion().subscribe(data => {
       this.evaluaciones = data.filter(e => e.paciente === this.idPaciente);
+      this.cdr.detectChanges();
+      
+      if (this.evaluaciones.length > 0) {
+        setTimeout(() => this.generarGrafica(), 100); 
+      }
     });
   }
 

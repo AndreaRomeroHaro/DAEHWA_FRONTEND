@@ -1,6 +1,16 @@
-<nav class="nav nav-pills mb-3">
-  <a class="nav-link" routerLink="paciente-home">Mis Pacientes</a>
-  <a class="nav-link" routerLink="calendario">Calendario</a>
-  <a class="nav-link" routerLink="chat">Chat</a>
-</nav>
-<router-outlet></router-outlet>
+<div class="d-flex flex-column min-vh-100">
+
+  <div class="flex-grow-1">
+    
+    <nav class="nav nav-pills mb-3 mt-3 container">
+      <a class="nav-link" routerLink="pacientes" routerLinkActive="active">Mis Pacientes</a>
+      <a class="nav-link" routerLink="calendario" routerLinkActive="active">Calendario</a>
+    </nav>
+
+    <div class="container">
+      <router-outlet></router-outlet>
+    </div>
+
+  </div>
+
+</div>

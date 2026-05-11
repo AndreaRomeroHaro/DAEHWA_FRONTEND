@@ -12,26 +12,32 @@ import { AuthUserService } from "../services/authuser.service";
     styleUrl:'./login.component.css'
 })
 export class LoginComponent{
-    email='';
+    username='';
     password='';
     error='';
 
-    constructor(private auth:AuthUserService,private router:Router){
+    constructor(private auth:AuthUserService, private router:Router){}
+        login() {
+        this.auth.login(this.username, this.password).subscribe({
+            next: (res) => {
+                
+                const usuarioGuardado = this.auth.obtenerUsuarioActual();
+                const rol = usuarioGuardado.rol;
 
-    }
-    login(){
-            this.auth.login(this.email,this.password).subscribe({next:res=>{
-                const usuario=res.usuario;
+                console.log("Rol detectado:", rol);
 
-                if (usuario.rol==='L'){
+                if (rol === 'L') {
                     this.router.navigate(['/logopeda']);
-                }else if(usuario.rol==='F'){
+                } else if (rol === 'F') {
                     this.router.navigate(['/familiar']);
+                } else {
+                    console.error("Error: El rol no se reconoce en el token.");
                 }
             },
-            error:()=>{
-                this.error='Email o contraseña invalidos';
+            error: () => {
+                this.error = 'Usuario o contraseña incorrectos';
             }
         });
     }
+
 }

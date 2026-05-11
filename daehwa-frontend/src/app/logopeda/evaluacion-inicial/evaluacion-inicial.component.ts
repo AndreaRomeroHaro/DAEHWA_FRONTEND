@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { EvaluacionInicial } from '../../models/Evaluacion_Inicial';
 import { EvaluacionInicialService } from '../../services/evaluacion-inicial.service';
 import { ActivatedRoute } from '@angular/router';
+import { ChangeDetectorRef } from '@angular/core';
 
 @Component({
   selector: 'app-evaluacion-inicial',
@@ -32,7 +33,8 @@ export class EvaluacionInicialComponent implements OnInit {
 
   constructor(
     private evaluacionServicio: EvaluacionInicialService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -44,6 +46,7 @@ export class EvaluacionInicialComponent implements OnInit {
   cargarEvaluaciones(): void {
     this.evaluacionServicio.listarEvaluacion().subscribe(data => {
       this.evaluaciones = data.filter(e => e.paciente === this.idPaciente);
+      this.cdr.detectChanges(); 
     });
   }
 

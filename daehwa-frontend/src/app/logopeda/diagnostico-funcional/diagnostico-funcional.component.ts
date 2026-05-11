@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { DiagnosticoFuncional } from '../../models/Diagnostico_Funcional';
 import { DiagnosticoFuncionalService } from '../../services/diagnostico-funcional.service';
 import { ActivatedRoute } from '@angular/router';
+import { ChangeDetectorRef } from '@angular/core';
 
 @Component({
   selector: 'app-diagnostico-funcional',
@@ -30,7 +31,8 @@ export class DiagnosticoFuncionalComponent implements OnInit {
 
   constructor(
     private diagnosticoServicio: DiagnosticoFuncionalService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -42,6 +44,7 @@ export class DiagnosticoFuncionalComponent implements OnInit {
   cargarDiagnosticos(): void {
     this.diagnosticoServicio.listarDiagnostico().subscribe(data => {
       this.diagnosticos = data.filter(d => d.paciente === this.idPaciente);
+      this.cdr.detectChanges(); 
     });
   }
 

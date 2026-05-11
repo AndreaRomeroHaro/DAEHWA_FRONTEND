@@ -6,6 +6,7 @@ import { CitaService } from '../../services/citas.service';
 
 @Component({
   selector: 'app-citas-logopeda',
+  standalone:true,
   imports: [CommonModule,FormsModule],
   templateUrl: './citas-logopeda.component.html',
   styleUrl: './citas-logopeda.component.css',
