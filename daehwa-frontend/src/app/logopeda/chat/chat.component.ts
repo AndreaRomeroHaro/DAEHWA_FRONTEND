@@ -1,9 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ChatService } from '../../services/chat.service';
 import { ActivatedRoute } from '@angular/router';
 import { AuthUserService } from '../../services/authuser.service';
+import { PacienteLogopedaService } from '../../services/pacientes-logopeda.service';
 
 @Component({
   selector: 'app-chat',
@@ -17,27 +18,42 @@ export class ChatComponent implements OnInit {
   mensajes: any[] = [];
   mensajeNuevo = '';
 
+  idPaciente = 0;
   idFamiliar = 0;     
   idLogopeda = 0; 
 
   constructor(
     private chatService: ChatService,
     private route: ActivatedRoute,
-    private authUserService: AuthUserService
+    private authUserService: AuthUserService,
+    private pacienteService: PacienteLogopedaService, 
+    private cdr: ChangeDetectorRef 
   ) {}
 
   ngOnInit(): void {
-    this.idFamiliar = Number(this.route.snapshot.paramMap.get('idFamiliar'));
     this.idLogopeda = this.authUserService.getUsuarioId();
+    this.idPaciente = Number(this.route.snapshot.paramMap.get('idPaciente'));
 
-    this.cargarMensajes();
+    this.pacienteService.obtenerPaciente(this.idPaciente).subscribe({
+      next: (paciente) => {
+        this.idFamiliar = paciente.familiar || 0;         
+        this.cargarMensajes(); 
+      },
+      error: (err) => console.error("Error al cargar paciente:", err)
+    });
   }
 
   cargarMensajes(): void {
-  this.chatService.obtenerMensajes(this.idLogopeda, this.idFamiliar)
-    .subscribe(m => this.mensajes = m);
-  }
+    this.chatService.obtenerMensajes().subscribe(todosMisMensajes => {
+      this.mensajes = todosMisMensajes.filter(m => 
+        (m.emisor === this.idLogopeda && m.receptor === this.idFamiliar) ||
+        (m.emisor === this.idFamiliar && m.receptor === this.idLogopeda)
+      );
 
+      this.mensajes.sort((a, b) => new Date(a.fecha).getTime() - new Date(b.fecha).getTime());
+      this.cdr.detectChanges(); 
+    });
+  }
 
   enviarMensaje(): void {
     if (!this.mensajeNuevo.trim()) return;
@@ -48,11 +64,15 @@ export class ChatComponent implements OnInit {
       texto: this.mensajeNuevo,
     };
 
-    this.chatService.enviarMensaje(mensaje).subscribe(() => {
-      this.mensajeNuevo = '';
-      this.cargarMensajes();
+    this.chatService.enviarMensaje(mensaje).subscribe({
+      next: () => {
+        this.mensajeNuevo = '';
+        this.cargarMensajes(); 
+      },
+      error: (err) => {
+        console.error('Error', err);
+      }
     });
   }
 }
-
 export default ChatComponent;

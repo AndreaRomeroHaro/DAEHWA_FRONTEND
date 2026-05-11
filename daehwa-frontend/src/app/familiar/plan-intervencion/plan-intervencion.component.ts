@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, OnInit,ChangeDetectorRef } from '@angular/core';
+import { CommonModule, } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { PlanIntervencionService } from '../../services/plan-intervencion.service';
 import { PlanIntervencion } from '../../models/Plan_Intervencion';
@@ -19,7 +19,8 @@ export class PlanIntervencionComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private planService: PlanIntervencionService
+    private planService: PlanIntervencionService,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -35,10 +36,12 @@ export class PlanIntervencionComponent implements OnInit {
       next: (planes) => {
         this.plan_intervencion = planes.find(p => p.paciente === this.idPaciente) || null;
         this.cargando = false;
+        this.cdr.detectChanges();
       },
       error: () => {
         this.error = "No se puede cargar el plan de intervención";
         this.cargando = false;
+        this.cdr.detectChanges();
       }
     });
   }

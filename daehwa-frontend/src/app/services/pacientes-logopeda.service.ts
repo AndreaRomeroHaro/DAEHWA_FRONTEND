@@ -9,7 +9,6 @@ import { Paciente } from "../models/Paciente";
 })
 
 export class PacienteLogopedaService{
-    private enlaceApi='http://127.0.0.1:8000/api/logopeda/';
 
     constructor(private http:HttpClient,private authUser:AuthUserService){}
 

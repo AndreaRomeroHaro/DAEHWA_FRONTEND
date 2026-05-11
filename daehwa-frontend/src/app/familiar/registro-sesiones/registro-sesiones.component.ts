@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit,ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { RegistroSesionService } from '../../services/registro-sesiones.service';
@@ -18,7 +18,7 @@ export class RegistroSesionesComponent implements OnInit {
   error:string|null=null;
   detalleRegistro:number|null=null;
 
-  constructor(private route: ActivatedRoute,private sesionService:RegistroSesionService){}
+  constructor(private route: ActivatedRoute,private sesionService:RegistroSesionService,private cdr: ChangeDetectorRef){}
 
   ngOnInit(): void {
     this.idPaciente=Number(this.route.snapshot.paramMap.get('idPaciente'));
@@ -33,10 +33,12 @@ export class RegistroSesionesComponent implements OnInit {
       next:(data:RegistroSesion[]) => {
         this.sesiones=data;
         this.cargando=false;
+        this.cdr.detectChanges();
       },
       error:()=>{
         this.error="No se puede cargar las sesiones";
         this.cargando=false;
+        this.cdr.detectChanges();
       }
     })
 

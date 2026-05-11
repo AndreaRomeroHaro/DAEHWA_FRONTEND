@@ -1,4 +1,4 @@
-import { Component,OnInit } from '@angular/core';
+import { Component,OnInit,ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { DiagnosticoFuncional } from '../../models/Diagnostico_Funcional';
@@ -16,7 +16,7 @@ export class DiagnosticoFuncionalComponent implements OnInit{
     cargando=true;
     error:string|null=null;
   
-    constructor(private route: ActivatedRoute,private diagnosticoService:DiagnosticoFuncionalService){}
+    constructor(private route: ActivatedRoute,private diagnosticoService:DiagnosticoFuncionalService,private cdr: ChangeDetectorRef){}
   
     ngOnInit(): void {
       this.idPaciente=Number(this.route.snapshot.paramMap.get('idPaciente'));
@@ -32,10 +32,12 @@ export class DiagnosticoFuncionalComponent implements OnInit{
       next: (data) => {
         this.diagnostico = data.find(d => d.paciente === this.idPaciente) || null;
         this.cargando = false;
+        this.cdr.detectChanges();
       },
       error: () => {
         this.error = "No se puede cargar el diagnóstico";
         this.cargando = false;
+        this.cdr.detectChanges();
       }
     });
 

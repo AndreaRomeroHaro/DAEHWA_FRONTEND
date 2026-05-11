@@ -56,11 +56,16 @@ export const routes: Routes = [
   },
 
   // FAMILIAR
+  // FAMILIAR
   {
     path: 'familiar',
     canActivate: [authGuard, roleGuard('F')],
-    component: ComponenteFamiliar,
+    // ¡Ojo! Hemos quitado el 'component: ComponenteFamiliar' de aquí arriba
     children: [
+      // 1. Ahora el panel de botones es la ruta por defecto del familiar
+      { path: '', component: ComponenteFamiliar }, 
+
+      // 2. Y el resto de pantallas son "hermanas" del panel, así se sustituyen enteras
       { path: 'paciente/:idPaciente/diagnostico-funcional', loadComponent: () =>
           import('./familiar/diagnostico-funcional/diagnostico-funcional.component')
             .then(m => m.default)

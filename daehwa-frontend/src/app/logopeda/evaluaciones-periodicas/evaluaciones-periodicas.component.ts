@@ -61,10 +61,15 @@ export class EvaluacionesPeriodicasComponent implements OnInit {
       ? this.evaluacionServicio.editarEvaluacion(this.nuevaEvaluacion.id, this.nuevaEvaluacion)
       : this.evaluacionServicio.crearEvaluacion(this.nuevaEvaluacion);
 
-    peticion.subscribe(() => {
-      this.editar = false;
-      this.resetearFormulario();
-      this.cargarEvaluaciones();
+    peticion.subscribe({
+      next: () => {
+        this.editar = false;
+        this.resetearFormulario();
+        this.cargarEvaluaciones();
+      },
+      error: (err) => {
+        console.log("Error", err.error);
+      }
     });
   }
 

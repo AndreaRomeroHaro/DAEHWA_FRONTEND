@@ -15,7 +15,7 @@ export class CitasLogopedaComponent implements OnInit{
   citas: Cita[] = [];
 
   nuevaCita:Cita={
-    id_cita:0,
+    id:0,
     fecha_inicio:new Date(),
     fecha_fin:new Date(),
     id_paciente:0,
@@ -43,8 +43,8 @@ export class CitasLogopedaComponent implements OnInit{
   }
 
   crearCita():void{
-    const peticion=this.editar&& this.nuevaCita.id_cita
-    ?this.citasServicio.editarCita(this.nuevaCita.id_cita,this.nuevaCita)
+    const peticion=this.editar&& this.nuevaCita.id
+    ?this.citasServicio.editarCita(this.nuevaCita.id,this.nuevaCita)
     :this.citasServicio.crearCita(this.nuevaCita);
 
     peticion.subscribe(()=>
@@ -74,7 +74,7 @@ export class CitasLogopedaComponent implements OnInit{
 
   resetearFormulario():void{
     this.nuevaCita={
-      id_cita:0,
+      id:0,
       fecha_inicio:new Date(),
       fecha_fin:new Date(),
       id_paciente:0,

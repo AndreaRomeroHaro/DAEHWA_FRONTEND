@@ -4,7 +4,7 @@
     <div class="card shadow-sm">
         <div class="card-body" id="bodyCard">
 
-            @for (mensaje of mensajes; track mensaje.id_mensaje) {
+            @for (mensaje of mensajes; track mensaje.id) {
 
                 <div class="mb-3">
                     <strong>{{ mensaje.emisor === idLogopeda ? 'Tú' : 'Familiar' }}</strong>
