@@ -1,57 +1,61 @@
+/* Fondo del navbar */
 .navbar-daehwa {
-  background-color: #0077C8;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-}
-
-.navbar-daehwa .navbar-brand {
+  background-color: #0d6efd;
   color: white;
-  font-size: 1.25rem;
 }
 
-.navbar-daehwa .navbar-brand:hover {
-  color: #F2F2F2;
+/* Contenedor del logo (más grande) */
+.logo-wrapper {
+  width: 55px;
+  height: 55px;
+  border-radius: 10px;
+  overflow: hidden;
+  background: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.usuario-info {
+/* Imagen del logo (más grande y nítida) */
+.logo-img {
+  width: 90%;
+  height: auto;
+  object-fit: contain;
+}
+
+/* Texto de la marca */
+.brand-text {
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: 1px;
   color: white;
-  font-size: 1rem;
+}
+
+/* Hover suave */
+.navbar-brand:hover .brand-text {
+  color: #e6e6e6;
+}
+
+/* Nombre del usuario */
+.usuario-nombre {
+  color: white;
   font-weight: 500;
 }
 
+/* Badge del rol */
 .rol-badge {
-  background-color: #F28C28;
+  background-color: #ffc107;
   color: #000;
   font-weight: 600;
 }
 
-.btn-logout {
-  background-color: transparent;
-  border: 2px solid white;
-  color: white;
-  font-weight: 600;
+/* Botón logout */
+.btn-outline-light {
   border-radius: 6px;
+  font-weight: 500;
 }
 
-.btn-logout:hover {
+.btn-outline-light:hover {
   background-color: white;
-  color: #0077C8;
-}
-
-.btn-login {
-  background-color: white;
-  color: #0077C8;
-  font-weight: 600;
-  border-radius: 6px;
-}
-
-.btn-login:hover {
-  background-color: #F2F2F2;
-}
-
-.navbar-daehwa .navbar-toggler {
-  border-color: rgba(255,255,255,0.7);
-}
-
-.navbar-daehwa .navbar-toggler-icon {
-  filter: invert(1);
+  color: #0d6efd;
 }

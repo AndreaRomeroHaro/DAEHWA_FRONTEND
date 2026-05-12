@@ -5,7 +5,7 @@ import { CommonModule } from '@angular/common';
 @Component({
   selector: 'app-logopeda',
   standalone:true,
-  imports: [CommonModule,RouterModule,],
+  imports: [CommonModule,RouterModule],
   templateUrl: './logopeda.component.html',
   styleUrl: './logopeda.component.css',
 })
