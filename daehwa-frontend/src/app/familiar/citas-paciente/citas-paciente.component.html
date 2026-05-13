@@ -7,10 +7,24 @@
             @for(cita of citas; track cita.id){
                 <li class="list-group-item">
                     <div class="d-flex justify-content-between align-items-center">
-                        <strong>{{ cita.fecha_inicio | date:'dd/MM/yyyy' }}</strong>
-                        <button class="btn btn-sm btn-outline-primary" (click)="detalle_Cita(cita.id)">
-                            {{ detalleCita === cita.id ? 'Ocultar' : 'Ver detalles' }}
-                        </button>
+                        <div>
+                            <strong>{{ cita.fecha_inicio | date:'dd/MM/yyyy HH:mm' }}</strong>
+                            <span class="badge ms-2" [class.bg-success]="cita.estado === 'activa'" [class.bg-danger]="cita.estado === 'cancelada'">
+                                {{ cita.estado }}
+                            </span>
+                        </div>
+                        
+                        <div>
+                            <button class="btn btn-sm btn-outline-primary me-2" (click)="detalle_Cita(cita.id)">
+                                {{ detalleCita === cita.id ? 'Ocultar' : 'Ver detalles' }}
+                            </button>
+                            
+                            @if(cita.estado === 'activa') {
+                                <button class="btn btn-sm btn-outline-danger" (click)="cancelarCita(cita.id)">
+                                    Cancelar
+                                </button>
+                            }
+                        </div>
                     </div>
 
                     @if(detalleCita === cita.id){

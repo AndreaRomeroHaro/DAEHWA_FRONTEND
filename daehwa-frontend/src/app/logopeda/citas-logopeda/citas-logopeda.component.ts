@@ -43,7 +43,11 @@ export class CitasLogopedaComponent implements OnInit {
   cargarCitas(): void {
     this.citasServicio.listarCita().subscribe({
       next: (data) => {
-        this.citas = data;
+        this.citas = data.map(cita => ({
+          ...cita,
+          estadoVisual: this.calcularEstadoVisual(cita)
+        }));
+        this.citas.sort((a, b) => new Date(b.fecha_inicio).getTime() - new Date(a.fecha_inicio).getTime());
         this.cdr.detectChanges();
       },
       error: () => {
@@ -51,6 +55,18 @@ export class CitasLogopedaComponent implements OnInit {
         this.cdr.detectChanges();
       }
     });
+  }
+
+  calcularEstadoVisual(cita: any): any {
+    if (cita.estado === 'cancelada') return { texto: 'Cancelada', clase: 'bg-danger' };
+
+    const ahora = new Date().getTime();
+    const inicio = new Date(cita.fecha_inicio).getTime();
+    const fin = new Date(cita.fecha_fin).getTime();
+
+    if (ahora < inicio) return { texto: 'Pendiente', clase: 'bg-primary' };
+    if (ahora >= inicio && ahora <= fin) return { texto: 'En curso', clase: 'bg-success' };
+    return { texto: 'Finalizada', clase: 'bg-secondary' };
   }
 
   actualizarFechaInicio(fecha: string) {
@@ -84,25 +100,11 @@ export class CitasLogopedaComponent implements OnInit {
         this.cargarCitas();
       },
       error: (err) => {
-        this.mensajeError = "";
-        
-        if (err.error) {
-          const textoError = Object.values(err.error).flat().join(' ');
-          
-          if (textoError.includes('anterior a la fecha actual')) {
-            this.mensajeError += "La fecha no puede ser en el pasado. ";
-          }
-          if (textoError.includes('Clave primaria') || textoError.includes('objeto no existe') || textoError.includes('Este campo es requerido')) {
-            this.mensajeError += "Asegúrate de introducir un ID de paciente válido. ";
-          }
-          
-          if (this.mensajeError === "") {
-            this.mensajeError = textoError || "No se pudo guardar la cita. Revisa los datos.";
-          }
+        if (err.error && typeof err.error === 'object') {
+          this.mensajeError = Object.values(err.error).flat().join(' ');
         } else {
-          this.mensajeError = "No se pudo conectar con el servidor.";
+          this.mensajeError = "Ocurrió un error inesperado al guardar la cita.";
         }
-        
         this.cdr.detectChanges();
       }
     });
@@ -121,12 +123,20 @@ export class CitasLogopedaComponent implements OnInit {
     });
   }
 
+  cancelarEdicion(): void {
+    this.resetearFormulario();
+  }
+
   cancelarCita(id: number): void {
-    if (confirm('¿Estás seguro de que deseas cancelar esta cita?')) {
-      this.citasServicio.cancelarCita(id).subscribe(() => {
+    this.citasServicio.cancelarCita(id).subscribe({
+      next: () => {
         this.cargarCitas();
-      });
-    }
+      },
+      error: () => {
+        this.mensajeError = "Hubo un problema al cancelar la cita.";
+        this.cdr.detectChanges();
+      }
+    });
   }
 
   detalle_Cita(id: number): void {
@@ -146,5 +156,4 @@ export class CitasLogopedaComponent implements OnInit {
     this.mensajeError = null;
   }
 }
-
 export default CitasLogopedaComponent;

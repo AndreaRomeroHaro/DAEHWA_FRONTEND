@@ -16,7 +16,7 @@ export class CitaService {
   }
 
   editarCita(id:number,cita:Cita):Observable<Cita>{
-    return this.http.post<Cita>(`${this.enlaceApi}${id}/`, cita)
+    return this.http.put<Cita>(`${this.enlaceApi}${id}/`, cita)
   }
 
   consultarCita(id:number):Observable<Cita>{

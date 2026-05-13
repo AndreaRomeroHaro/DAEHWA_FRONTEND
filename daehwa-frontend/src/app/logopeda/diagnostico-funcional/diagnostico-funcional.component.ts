@@ -16,6 +16,7 @@ import { ChangeDetectorRef } from '@angular/core';
 export class DiagnosticoFuncionalComponent implements OnInit {
 
   diagnosticos: DiagnosticoFuncional[] = [];
+  mensajeError: string | null = null;
 
   nuevoDiagnostico: DiagnosticoFuncional = {
     id: 0,
@@ -53,16 +54,26 @@ export class DiagnosticoFuncionalComponent implements OnInit {
   }
 
   crearDiagnostico(): void {
-    const peticion = this.editar
-      ? this.diagnosticoServicio.editarDiagnostico(this.nuevoDiagnostico.id, this.nuevoDiagnostico)
-      : this.diagnosticoServicio.crearDiagnostico(this.nuevoDiagnostico);
+  const peticion = this.editar
+    ? this.diagnosticoServicio.editarDiagnostico(this.nuevoDiagnostico.id, this.nuevoDiagnostico)
+    : this.diagnosticoServicio.crearDiagnostico(this.nuevoDiagnostico);
 
-    peticion.subscribe(() => {
+  peticion.subscribe({
+    next: () => {
       this.editar = false;
+      this.mensajeError = null;
       this.resetearFormulario();
       this.cargarDiagnosticos();
-    });
-  }
+    },
+    error: (err) => {
+      if (err.error && typeof err.error === 'object') {
+        this.mensajeError = Object.values(err.error).flat().join(' ');
+      } else {
+        this.mensajeError = "Ocurrió un error al guardar el diagnóstico.";
+      }
+    }
+  });
+}
 
   editarDiagnostico(id: number): void {
     this.diagnosticoServicio.consultarDiagnostico(id).subscribe(diagnostico => {

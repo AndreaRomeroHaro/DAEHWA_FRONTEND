@@ -69,7 +69,17 @@ export class EvaluacionInicialComponent implements OnInit {
 
   editarEvaluacion(id: number): void {
     this.evaluacionServicio.consultarEvaluacion(id).subscribe(evaluacion => {
-      this.nuevaEvaluacion = { ...evaluacion };
+    this.nuevaEvaluacion = 
+      {
+        id: evaluacion.id,
+        paciente: evaluacion.paciente,
+        antecedentes_clinicos: evaluacion.antecedentes_clinicos,
+        entorno_familiar: evaluacion.entorno_familiar,
+        pruebas: evaluacion.pruebas,
+        observacion_directa: evaluacion.observacion_directa,
+        archivos_adjuntos: null 
+      };
+
       this.editar = true;
     });
   }

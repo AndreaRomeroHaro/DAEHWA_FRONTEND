@@ -1,5 +1,11 @@
 <div class="container mt-4">
   <h3 class="mb-4">{{ editar ? 'Editar Diagnóstico' : 'Nuevo Diagnóstico Funcional' }}</h3>
+  @if (mensajeError) {
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        {{ mensajeError }}
+        <button type="button" class="btn-close" (click)="mensajeError = null"></button>
+    </div>
+    }
 
   <form (ngSubmit)="crearDiagnostico()" class="card p-4 shadow-sm mb-5">
     <div class="mb-3">
