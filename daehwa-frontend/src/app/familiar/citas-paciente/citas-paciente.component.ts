@@ -13,9 +13,10 @@ import { Cita } from '../../models/Cita';
 })
 export class CitasPacienteComponent implements OnInit {
 
-  citas: Cita[] = [];
+  citas: any[] = [];
   detalleCita: number | null = null;
   idPaciente!: number;
+  mensajeError: string | null = null;
 
   constructor(
     private citasServicio: CitaService,
@@ -31,13 +32,32 @@ export class CitasPacienteComponent implements OnInit {
   cargarCitas(): void {
     this.citasServicio.listarCita().subscribe({
       next: (data: Cita[]) => {
-        this.citas = data.filter((cita: any) => cita.paciente === this.idPaciente || cita.id_paciente === this.idPaciente);
+        this.citas = data
+          .filter(cita => cita.id_paciente === this.idPaciente || cita.id_paciente === this.idPaciente)
+          .map(cita => ({
+            ...cita,
+            estadoVisual: this.calcularEstadoVisual(cita)
+          }))
+          .sort((a, b) => new Date(b.fecha_inicio).getTime() - new Date(a.fecha_inicio).getTime());
+
         this.cdr.detectChanges();
       },
       error: () => {
-        alert('Ocurrió un error al cargar las citas.');
+        this.mensajeError = "Ocurrió un error al cargar las citas.";
       }
     });
+  }
+
+  calcularEstadoVisual(cita: any) {
+    if (cita.estado === 'cancelada') return { texto: 'Cancelada', clase: 'bg-danger' };
+
+    const ahora = new Date().getTime();
+    const inicio = new Date(cita.fecha_inicio).getTime();
+    const fin = new Date(cita.fecha_fin).getTime();
+
+    if (ahora < inicio) return { texto: 'Pendiente', clase: 'bg-primary' };
+    if (ahora >= inicio && ahora <= fin) return { texto: 'En curso', clase: 'bg-success' };
+    return { texto: 'Finalizada', clase: 'bg-secondary' };
   }
 
   detalle_Cita(id: number): void {
@@ -47,12 +67,8 @@ export class CitasPacienteComponent implements OnInit {
   cancelarCita(id: number): void {
     if (confirm('¿Estás seguro de que deseas cancelar esta cita?')) {
       this.citasServicio.cancelarCita(id).subscribe({
-        next: () => {
-          this.cargarCitas();
-        },
-        error: () => {
-          alert('No se pudo cancelar la cita. Inténtalo de nuevo.');
-        }
+        next: () => this.cargarCitas(),
+        error: () => this.mensajeError = "No se pudo cancelar la cita."
       });
     }
   }
