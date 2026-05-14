@@ -16,6 +16,7 @@ import { ChangeDetectorRef } from '@angular/core';
 export class PlanIntervencionComponent implements OnInit {
 
   planes: PlanIntervencion[] = [];
+  mensajeError: string | null = null;
 
   nuevoPlan: PlanIntervencion = {
     id: 0,
@@ -54,10 +55,20 @@ export class PlanIntervencionComponent implements OnInit {
       ? this.planService.editarPlanIntervencion(this.nuevoPlan.id, this.nuevoPlan)
       : this.planService.crearPlanIntervencion(this.nuevoPlan);
 
-    peticion.subscribe(() => {
-      this.editar = false;
-      this.resetearFormulario();
-      this.cargarPlanes();
+    peticion.subscribe({
+      next: () => {
+        this.editar = false;
+        this.resetearFormulario();
+        this.cargarPlanes();
+      },
+      error: (err) => {
+        if (err.error && typeof err.error === 'object') {
+          const valores = Object.values(err.error).flat();
+          this.mensajeError = String(valores[0]); 
+        } else {
+          this.mensajeError = 'Error al guardar el registro de sesiones';
+        }
+      }
     });
   }
 

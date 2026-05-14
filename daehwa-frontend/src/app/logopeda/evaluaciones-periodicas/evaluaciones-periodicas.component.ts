@@ -17,6 +17,7 @@ import { ChangeDetectorRef } from '@angular/core';
 export class EvaluacionesPeriodicasComponent implements OnInit {
 
   evaluaciones: EvaluacionPeriodica[] = [];
+  mensajeError: string | null = null;
 
   nuevaEvaluacion: EvaluacionPeriodica = {
     id: 0,
@@ -68,7 +69,12 @@ export class EvaluacionesPeriodicasComponent implements OnInit {
         this.cargarEvaluaciones();
       },
       error: (err) => {
-        console.log("Error", err.error);
+        if (err.error && typeof err.error === 'object') {
+          const valores = Object.values(err.error).flat();
+          this.mensajeError = String(valores[0]); 
+        } else {
+          this.mensajeError = 'Error al guardar el registro de sesiones';
+        }
       }
     });
   }

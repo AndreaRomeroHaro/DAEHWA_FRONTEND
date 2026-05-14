@@ -15,6 +15,7 @@ import { ActivatedRoute } from '@angular/router';
 export class RegistroSesionesComponent implements OnInit {
 
   sesiones: RegistroSesion[] = [];
+  mensajeError: string | null = null;
 
   nuevaSesion: RegistroSesion = {
     id: 0,
@@ -48,15 +49,29 @@ export class RegistroSesionesComponent implements OnInit {
       .subscribe(sesion => this.sesiones = sesion);
   }
 
-  crearSesion(): void {
-    const peticion = this.editar
-      ? this.sesionServicio.editarRegistro_Sesiones(this.nuevaSesion.id, this.nuevaSesion)
-      : this.sesionServicio.crearRegistro_Sesiones(this.nuevaSesion);
+    crearSesion(): void {
+    this.mensajeError = null;
 
-    peticion.subscribe(() => {
-      this.editar = false;
-      this.resetearFormulario();
-      this.cargarSesiones();
+    const datos = { ...this.nuevaSesion };
+
+    const peticion = this.editar
+      ? this.sesionServicio.editarRegistro_Sesiones(datos.id, datos)
+      : this.sesionServicio.crearRegistro_Sesiones(datos);
+
+    peticion.subscribe({
+      next: () => {
+        this.editar = false;
+        this.resetearFormulario();
+        this.cargarSesiones();
+      },
+      error: (err) => {
+        if (err.error && typeof err.error === 'object') {
+          const valores = Object.values(err.error).flat();
+          this.mensajeError = String(valores[0]); 
+        } else {
+          this.mensajeError = 'Error al guardar el registro de sesiones';
+        }
+      }
     });
   }
 

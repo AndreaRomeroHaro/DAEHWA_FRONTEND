@@ -66,12 +66,13 @@ export class DiagnosticoFuncionalComponent implements OnInit {
       this.cargarDiagnosticos();
     },
     error: (err) => {
-      if (err.error && typeof err.error === 'object') {
-        this.mensajeError = Object.values(err.error).flat().join(' ');
-      } else {
-        this.mensajeError = "Ocurrió un error al guardar el diagnóstico.";
+        if (err.error && typeof err.error === 'object') {
+          const valores = Object.values(err.error).flat();
+          this.mensajeError = String(valores[0]); 
+        } else {
+          this.mensajeError = 'Error al guardar el registro de sesiones';
+        }
       }
-    }
   });
 }
 
