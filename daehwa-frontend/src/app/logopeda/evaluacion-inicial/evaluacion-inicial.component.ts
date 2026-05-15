@@ -16,6 +16,7 @@ import { ChangeDetectorRef } from '@angular/core';
 export class EvaluacionInicialComponent implements OnInit {
 
   evaluaciones: EvaluacionInicial[] = [];
+  mensajeError: string | null = null;
 
   nuevaEvaluacion: EvaluacionInicial = {
     id: 0,
@@ -60,10 +61,20 @@ export class EvaluacionInicialComponent implements OnInit {
       ? this.evaluacionServicio.editarEvaluacion(this.nuevaEvaluacion.id, this.nuevaEvaluacion)
       : this.evaluacionServicio.crearEvaluacion(this.nuevaEvaluacion);
 
-    peticion.subscribe(() => {
-      this.editar = false;
-      this.resetearFormulario();
-      this.cargarEvaluaciones();
+    peticion.subscribe({
+      next: () => {
+        this.editar = false;
+        this.resetearFormulario();
+        this.cargarEvaluaciones();
+      },
+      error: (err) => {
+        if (err.error && typeof err.error === 'object') {
+          const valores = Object.values(err.error).flat();
+          this.mensajeError = String(valores[0]); 
+        } else {
+          this.mensajeError = 'Error al guardar la evaluación periodicas';
+        }
+      }
     });
   }
 

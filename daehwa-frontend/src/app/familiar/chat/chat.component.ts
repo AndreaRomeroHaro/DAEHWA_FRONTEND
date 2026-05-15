@@ -17,6 +17,7 @@ export class ChatFamiliarComponent implements OnInit {
 
   mensajes: any[] = [];
   mensajeNuevo = '';
+  mensajeError: string | null = null;
 
   idPaciente = 0;
   idLogopeda = 0;
@@ -40,8 +41,8 @@ export class ChatFamiliarComponent implements OnInit {
         
         this.cargarMensajes();
       },
-      error: (err) => {
-        console.error('Error al obtener el paciente:', err);
+      error: () => {
+          this.mensajeError = 'Error al cargar el paciente.';
       }
     });
   }
@@ -71,8 +72,8 @@ export class ChatFamiliarComponent implements OnInit {
         this.mensajeNuevo = '';
         this.cargarMensajes();
       },
-      error: (err) => {
-        console.error('Error', err);
+      error: () => {
+          this.mensajeError = 'Error al enviar un mensaje.';
       }
     });
   }

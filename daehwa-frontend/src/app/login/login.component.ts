@@ -31,7 +31,7 @@ export class LoginComponent{
                 } else if (rol === 'F') {
                     this.router.navigate(['/familiar']);
                 } else {
-                    console.error("Error: El rol no se reconoce en el token.");
+                    this.error= "El rol no se reconoce en el token";
                 }
             },
             error: () => {

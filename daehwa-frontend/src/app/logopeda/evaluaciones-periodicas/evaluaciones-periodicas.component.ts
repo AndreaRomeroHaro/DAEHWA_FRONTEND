@@ -73,7 +73,7 @@ export class EvaluacionesPeriodicasComponent implements OnInit {
           const valores = Object.values(err.error).flat();
           this.mensajeError = String(valores[0]); 
         } else {
-          this.mensajeError = 'Error al guardar el registro de sesiones';
+          this.mensajeError = 'Error al guardar las evaluaciones periodicas';
         }
       }
     });

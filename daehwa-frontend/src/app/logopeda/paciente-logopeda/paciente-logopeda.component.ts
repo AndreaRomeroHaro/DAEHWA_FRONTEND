@@ -15,6 +15,7 @@ import { Paciente } from '../../models/Paciente';
 export class PacienteLogopedaComponent implements OnInit {
 
   pacientes: Paciente[] = [];
+  mensajeError: string | null = null;
 
   constructor(
     private pacientesService: PacienteLogopedaService,
@@ -23,13 +24,15 @@ export class PacienteLogopedaComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.mensajeError = null;
     this.pacientesService.obtenerPacientes().subscribe({
       next: (datos) => {
         this.pacientes = datos; 
         this.cdr.detectChanges(); 
       },
-      error: (error) => {
-        console.error("¡Ups! Hubo un error al recibir:", error);
+      error: () => {
+        this.mensajeError = null;
+        this.mensajeError = "Error al cargar los pacientes";
       }
     });
   }

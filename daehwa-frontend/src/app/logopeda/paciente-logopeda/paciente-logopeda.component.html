@@ -14,11 +14,10 @@
         </div>
       </div>
     } @empty {
-      <div class="col-12">
-        <div class="alert alert-warning">
-          Error
-        </div>
-      </div>
+      <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        {{ mensajeError }}
+        <button type="button" class="btn-close" (click)="mensajeError = null"></button>
+    </div>
     }
   </div>
 </div>
