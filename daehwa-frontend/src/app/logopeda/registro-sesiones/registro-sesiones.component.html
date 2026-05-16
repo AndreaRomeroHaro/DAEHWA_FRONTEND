@@ -4,8 +4,8 @@
 
   @if (mensajeError) {
     <div class="alert alert-danger alert-dismissible fade show" role="alert">
-        {{ mensajeError }}
-        <button type="button" class="btn-close" (click)="mensajeError = null"></button>
+      {{ mensajeError }}
+      <button type="button" class="btn-close" (click)="mensajeError = null"></button>
     </div>
   }
 
@@ -49,9 +49,18 @@
         <input type="file" class="form-control" (change)="subirMultimedia($event)">
       </div>
 
-      <button class="btn btn-primary" (click)="crearSesion()">
-        {{ editar ? 'Guardar cambios' : 'Guardar sesión' }}
-      </button>
+      <div class="d-flex justify-content-end gap-2">
+        @if (editar) {
+          <button type="button" class="btn btn-secondary"
+                  (click)="resetearFormulario(); editar = false">
+            Cancelar
+          </button>
+        }
+
+        <button class="btn btn-primary" (click)="crearSesion()">
+          {{ editar ? 'Guardar cambios' : 'Guardar sesión' }}
+        </button>
+      </div>
 
     </div>
   </div>
@@ -59,6 +68,7 @@
   <h4 class="mb-3">Sesiones registradas</h4>
 
   <ul class="list-group">
+
     @for (sesion of sesiones; track sesion.id) {
 
       <li class="list-group-item">
@@ -70,11 +80,8 @@
           <div class="mt-3 border-top pt-3">
 
             <p><strong>Áreas trabajadas:</strong> {{ sesion.areas_lenguaje }}</p>
-
             <p><strong>Logros:</strong> {{ sesion.logros }}</p>
-
             <p><strong>Aspectos a mejorar:</strong> {{ sesion.aspectos_mejorar }}</p>
-
             <p><strong>Observaciones:</strong> {{ sesion.observaciones }}</p>
 
             <p><strong>Multimedia:</strong></p>
@@ -87,6 +94,7 @@
 
           </div>
         }
+
         <div class="d-flex gap-2 mt-2">
           <button class="btn btn-sm btn-outline-primary"
                   (click)="detallesSesion(sesion.id)">
@@ -102,8 +110,7 @@
                   (click)="eliminarSesion(sesion.id)">
             Eliminar
           </button>
-      </div>
-
+        </div>
 
       </li>
 
@@ -112,6 +119,7 @@
         No hay sesiones registradas.
       </li>
     }
+
   </ul>
 
 </div>

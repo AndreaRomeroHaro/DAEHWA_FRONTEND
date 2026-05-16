@@ -58,7 +58,6 @@ export class CitasLogopedaComponent implements OnInit {
   }
 
   calcularEstadoVisual(cita: any): any {
-    if (cita.estado === 'cancelada') return { texto: 'Cancelada', clase: 'bg-danger' };
 
     const ahora = new Date().getTime();
     const inicio = new Date(cita.fecha_inicio).getTime();

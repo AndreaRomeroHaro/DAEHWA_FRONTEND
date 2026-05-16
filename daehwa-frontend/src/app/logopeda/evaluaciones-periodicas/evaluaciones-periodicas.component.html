@@ -33,9 +33,15 @@
     </div>
     
     <div class="d-flex justify-content-end gap-2">
-      <button type="button" class="btn btn-secondary" *ngIf="editar" (click)="resetearFormulario(); editar = false">Cancelar</button>
+
+      @if (editar) {
+        <button type="button" class="btn btn-secondary" (click)="resetearFormulario(); editar = false"> Cancelar</button>
+      }
+
       <button type="submit" class="btn btn-primary">{{ editar ? 'Guardar Cambios' : 'Crear Evaluación' }}</button>
+
     </div>
+
   </form>
 
   <hr>

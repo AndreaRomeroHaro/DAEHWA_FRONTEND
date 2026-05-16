@@ -46,10 +46,12 @@ export class RegistroSesionesComponent implements OnInit {
 
   cargarSesiones(): void {
     this.sesionServicio.listarRegistro_Sesiones()
-      .subscribe(sesion => this.sesiones = sesion);
+      .subscribe(sesion => {
+        this.sesiones = sesion.filter(s => s.paciente === this.idPaciente);
+      });
   }
 
-    crearSesion(): void {
+  crearSesion(): void {
     this.mensajeError = null;
 
     const datos = { ...this.nuevaSesion };
@@ -67,7 +69,7 @@ export class RegistroSesionesComponent implements OnInit {
       error: (err) => {
         if (err.error && typeof err.error === 'object') {
           const valores = Object.values(err.error).flat();
-          this.mensajeError = String(valores[0]); 
+          this.mensajeError = String(valores[0]);
         } else {
           this.mensajeError = 'Error al guardar el registro de sesiones';
         }
