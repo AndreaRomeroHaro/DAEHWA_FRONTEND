@@ -47,7 +47,12 @@ export class RegistroSesionesComponent implements OnInit {
   cargarSesiones(): void {
     this.sesionServicio.listarRegistro_Sesiones()
       .subscribe(sesion => {
-        this.sesiones = sesion.filter(s => s.paciente === this.idPaciente);
+        this.sesiones = sesion
+          .filter(s => s.paciente === this.idPaciente)
+          .map(s => ({
+            ...s,
+            fecha: s.fecha ? s.fecha.substring(0, 10) : ''
+          }));
       });
   }
 
