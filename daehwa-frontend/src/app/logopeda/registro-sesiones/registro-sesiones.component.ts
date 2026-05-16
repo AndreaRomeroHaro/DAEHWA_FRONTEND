@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { RegistroSesion } from '../../models/Registro_Sesiones';
 import { RegistroSesionService } from '../../services/registro-sesiones.service';
 import { ActivatedRoute } from '@angular/router';
+import { ChangeDetectorRef } from '@angular/core';
 
 @Component({
   selector: 'app-registro-sesiones',
@@ -35,7 +36,8 @@ export class RegistroSesionesComponent implements OnInit {
 
   constructor(
     private sesionServicio: RegistroSesionService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -53,6 +55,7 @@ export class RegistroSesionesComponent implements OnInit {
             ...s,
             fecha: s.fecha ? s.fecha.substring(0, 10) : ''
           }));
+          this.cdr.detectChanges();
       });
   }
 
