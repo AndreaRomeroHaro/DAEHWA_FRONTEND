@@ -6,7 +6,7 @@ import { EvaluacionInicial } from "../models/Evaluacion_Inicial";
 @Injectable({ providedIn: 'root' })
 export class EvaluacionInicialService {
 
-  private enlaceApi = 'http://127.0.0.1:8000/api/evaluaciones-iniciales/';
+  private enlaceApi = 'https://daehwa-backend.onrender.com/api/evaluaciones-iniciales/';
 
   constructor(private http: HttpClient) {}
 

@@ -6,7 +6,7 @@ import { PlanIntervencion } from "../models/Plan_Intervencion";
 @Injectable({ providedIn: 'root' })
 export class PlanIntervencionService {
 
-  private enlaceApi = 'http://127.0.0.1:8000/api/planes-intervencion/';
+  private enlaceApi = 'https://daehwa-backend.onrender.com/api/planes-intervencion/';
 
   constructor(private http: HttpClient) {}
 

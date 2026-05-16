@@ -13,11 +13,11 @@ export class PacienteLogopedaService{
     constructor(private http:HttpClient,private authUser:AuthUserService){}
 
     obtenerPacientes(): Observable<Paciente[]> {
-      return this.http.get<Paciente[]>('http://127.0.0.1:8000/api/pacientes/');
+      return this.http.get<Paciente[]>('https://daehwa-backend.onrender.com/api/pacientes/');
   }
 
   obtenerPaciente(idPaciente: number): Observable<Paciente> {
-      return this.http.get<Paciente>(`http://127.0.0.1:8000/api/pacientes/${idPaciente}/`);
+      return this.http.get<Paciente>(`https://daehwa-backend.onrender.com/api/pacientes/${idPaciente}/`);
   }
 
 }

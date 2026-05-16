@@ -7,7 +7,7 @@ import { BehaviorSubject,tap } from "rxjs";
 })
 export class AuthUserService{
 
-    private apiUrl='http://127.0.0.1:8000/api/token/';
+    private apiUrl='https://daehwa-backend.onrender.com/api/token/';
 
     private usuarioSubject = new BehaviorSubject<any>(null);
     usuario$=this.usuarioSubject.asObservable();

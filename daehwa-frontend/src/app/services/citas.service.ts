@@ -7,7 +7,7 @@ import { AuthUserService } from "./authuser.service";
 @Injectable({providedIn:'root'})
 export class CitaService {
 
-  private enlaceApi='http://127.0.0.1:8000/api/citas/';
+  private enlaceApi='https://daehwa-backend.onrender.com/api/citas/';
   
   constructor(private http:HttpClient, private authUser:AuthUserService){}
   

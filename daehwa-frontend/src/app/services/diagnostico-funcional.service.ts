@@ -6,7 +6,7 @@ import { DiagnosticoFuncional } from "../models/Diagnostico_Funcional";
 @Injectable({ providedIn: 'root' })
 export class DiagnosticoFuncionalService {
 
-  private enlaceApi = 'http://127.0.0.1:8000/api/diagnosticos-funcionales/';
+  private enlaceApi = 'https://daehwa-backend.onrender.com/api/diagnosticos-funcionales/';
 
   constructor(private http: HttpClient) {}
 

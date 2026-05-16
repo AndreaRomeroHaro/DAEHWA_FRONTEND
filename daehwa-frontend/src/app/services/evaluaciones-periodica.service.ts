@@ -6,7 +6,7 @@ import { EvaluacionPeriodica } from "../models/Evaluaciones_Periodicas";
 @Injectable({ providedIn: 'root' })
 export class EvaluacionPeriodicaService {
 
-  private enlaceApi = 'http://127.0.0.1:8000/api/evaluaciones-periodicas/';
+  private enlaceApi = 'https://daehwa-backend.onrender.com/api/evaluaciones-periodicas/';
 
   constructor(private http: HttpClient) {}
 

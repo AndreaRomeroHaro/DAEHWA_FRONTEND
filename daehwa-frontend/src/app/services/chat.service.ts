@@ -6,7 +6,7 @@ import { Observable } from "rxjs";
     providedIn:'root'
 })
 export class ChatService{
-    private enlaceApi='http://127.0.0.1:8000/api/chats/';
+    private enlaceApi='https://daehwa-backend.onrender.com/api/chats/';
 
     constructor(private http:HttpClient){}
     

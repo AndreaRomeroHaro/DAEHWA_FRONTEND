@@ -6,7 +6,7 @@ import { RegistroSesion } from "../models/Registro_Sesiones";
 @Injectable({ providedIn: 'root' })
 export class RegistroSesionService {
 
-  private enlaceApi = 'http://127.0.0.1:8000/api/registro-sesiones/';
+  private enlaceApi = 'https://daehwa-backend.onrender.com/api/registro-sesiones/';
 
   constructor(private http: HttpClient) {}
 
