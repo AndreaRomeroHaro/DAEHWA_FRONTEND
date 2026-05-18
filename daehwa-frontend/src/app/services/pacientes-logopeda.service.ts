@@ -8,7 +8,7 @@ import { Paciente } from "../models/Paciente";
 })
 export class PacienteLogopedaService{
 
-    private apiUrl = 'http://127.0.0.1:8000/api';
+    private apiUrl = 'https://daehwa-backend.onrender.com/api';
 
     constructor(private http:HttpClient){}
 
